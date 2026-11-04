@@ -1,0 +1,17 @@
+<div class="admin-layout">
+  @if (sidebarOpen()) {
+    <button
+      class="sidebar-backdrop"
+      type="button"
+      aria-label="Cerrar menú"
+      (click)="closeSidebar()"
+    ></button>
+  }
+  <app-sidebar [class.is-open]="sidebarOpen()" (navigate)="closeSidebar()" />
+  <div class="main-wrapper">
+    <app-header (menuClick)="toggleSidebar()" />
+    <main class="main-content" id="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

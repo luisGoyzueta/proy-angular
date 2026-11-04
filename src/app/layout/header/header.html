@@ -1,0 +1,17 @@
+<header class="header">
+    <div class="header-left">
+        <p-button icon="pi pi-bars" [text]="true" severity="secondary" ariaLabel="Abrir menú" styleClass="mobile-menu"
+            (onClick)="menuClick.emit()" />
+        <div>
+            <h2>Panel administrativo</h2>
+            <span>Bienvenido a tu espacio de trabajo</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <p-avatar label="AD" shape="circle" size="large" />
+        <div class="user-info">
+            <strong>Administrador</strong>
+            <span>Admin</span>
+        </div>
+    </div>
+</header>

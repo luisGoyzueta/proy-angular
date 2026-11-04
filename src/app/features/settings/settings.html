@@ -1,0 +1,178 @@
+<section class="settings-page">
+  <div class="page-header">
+    <div>
+      <h1>Configuración</h1>
+      <p>Administra las preferencias de tu sistema</p>
+    </div>
+  </div>
+
+  @if (saved()) {
+    <p-message severity="success" text="Cambios procesados en modo demostración." class="box-message"> </p-message>
+  }
+
+  <div class="settings-card">
+    <p-tabs [(value)]="activeTab" (valueChange)="clearMessage()">
+      <p-tablist>
+        <p-tab value="general">
+          <i class="pi pi-cog"></i>
+          General
+        </p-tab>
+        <p-tab value="notifications">
+          <i class="pi pi-bell"></i>
+          Notificaciones
+        </p-tab>
+        <p-tab value="security">
+          <i class="pi pi-lock"></i>
+          Seguridad
+        </p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <!-- CONFIGURACIÓN GENERAL -->
+        <p-tabpanel value="general">
+          <form [formGroup]="generalForm" (ngSubmit)="saveGeneral()" class="settings-form">
+            <div class="section-heading">
+              <h2>Información general</h2>
+              <p>Personaliza la información de tu organización.</p>
+            </div>
+            <div class="form-grid">
+              <div class="field full-width">
+                <label for="companyName">Nombre de la empresa</label>
+                <input id="companyName" pInputText formControlName="companyName" />
+                @if (
+                  generalForm.controls.companyName.touched &&
+                  generalForm.controls.companyName.invalid
+                ) {
+                  <small class="error"> El nombre de la empresa es obligatorio. </small>
+                }
+              </div>
+              <div class="field full-width">
+                <label for="email">Correo electrónico</label>
+                <input id="email" pInputText type="email" formControlName="email" />
+                @if (generalForm.controls.email.touched && generalForm.controls.email.invalid) {
+                  <small class="error"> Ingresa un correo electrónico válido. </small>
+                }
+              </div>
+              <div class="field">
+                <label for="language">Idioma</label>
+                <p-select
+                  inputId="language"
+                  [options]="languages"
+                  optionLabel="label"
+                  optionValue="value"
+                  formControlName="language"
+                  placeholder="Selecciona un idioma"
+                  styleClass="full-control"
+                />
+              </div>
+              <div class="field">
+                <label for="timezone">Zona horaria</label>
+                <p-select
+                  inputId="timezone"
+                  [options]="timezones"
+                  optionLabel="label"
+                  optionValue="value"
+                  formControlName="timezone"
+                  placeholder="Selecciona una zona horaria"
+                  styleClass="full-control"
+                />
+              </div>
+            </div>
+            <div class="form-actions">
+              <p-button type="submit" label="Guardar cambios" icon="pi pi-save" />
+            </div>
+          </form>
+        </p-tabpanel>
+        <!-- NOTIFICACIONES -->
+        <p-tabpanel value="notifications">
+          <form
+            [formGroup]="notificationsForm"
+            (ngSubmit)="saveNotifications()"
+            class="settings-form"
+          >
+            <div class="section-heading">
+              <h2>Notificaciones</h2>
+              <p>Selecciona qué avisos deseas recibir.</p>
+            </div>
+            <div class="notification-item">
+              <div>
+                <h3>Notificaciones por correo</h3>
+                <p>Recibe novedades en tu correo electrónico.</p>
+              </div>
+              <p-toggleswitch inputId="emailNotifications" formControlName="emailNotifications" />
+            </div>
+            <div class="notification-item">
+              <div>
+                <h3>Alertas del sistema</h3>
+                <p>Recibe avisos sobre eventos importantes.</p>
+              </div>
+              <p-toggleswitch inputId="systemAlerts" formControlName="systemAlerts" />
+            </div>
+            <div class="notification-item">
+              <div>
+                <h3>Reportes semanales</h3>
+                <p>Activa los resúmenes semanales de actividad.</p>
+              </div>
+              <p-toggleswitch inputId="weeklyReports" formControlName="weeklyReports" />
+            </div>
+            <div class="form-actions">
+              <p-button type="submit" label="Guardar preferencias" icon="pi pi-save" />
+            </div>
+          </form>
+        </p-tabpanel>
+        <!-- SEGURIDAD -->
+        <p-tabpanel value="security">
+          <form [formGroup]="securityForm" (ngSubmit)="saveSecurity()" class="settings-form">
+            <div class="section-heading">
+              <h2>Seguridad</h2>
+              <p>Formulario de demostración para cambiar la contraseña.</p>
+            </div>
+            <div class="form-grid">
+              <div class="field full-width">
+                <label for="currentPassword"> Contraseña actual </label>
+                <input
+                  id="currentPassword"
+                  pInputText
+                  type="password"
+                  autocomplete="current-password"
+                  formControlName="currentPassword"
+                />
+              </div>
+              <div class="field full-width">
+                <label for="newPassword"> Nueva contraseña </label>
+                <input
+                  id="newPassword"
+                  pInputText
+                  type="password"
+                  autocomplete="new-password"
+                  formControlName="newPassword"
+                />
+                @if (
+                  securityForm.controls.newPassword.touched &&
+                  securityForm.controls.newPassword.invalid
+                ) {
+                  <small class="error"> La contraseña debe tener al menos 8 caracteres. </small>
+                }
+              </div>
+              <div class="field full-width">
+                <label for="confirmPassword"> Confirmar contraseña </label>
+                <input
+                  id="confirmPassword"
+                  pInputText
+                  type="password"
+                  autocomplete="new-password"
+                  formControlName="confirmPassword"
+                />
+                @if (securityForm.controls.confirmPassword.hasError('mismatch')) {
+                  <small class="error"> Las contraseñas no coinciden. </small>
+                }
+              </div>
+            </div>
+            <div class="form-actions">
+              <p-button type="submit" label="Validar formulario" icon="pi pi-shield" />
+            </div>
+          </form>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</section>

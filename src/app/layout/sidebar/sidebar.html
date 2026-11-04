@@ -1,0 +1,15 @@
+<aside class="sidebar">
+    <div class="brand">
+        <i class="pi pi-chart-bar" aria-hidden="true"></i>
+        <span>AdminPanel</span>
+    </div>
+    <nav aria-label="Navegación principal">
+        <p class="menu-title">MENÚ PRINCIPAL</p>
+        @for (item of menuItems; track item.route) {
+        <a [routerLink]="item.route" routerLinkActive="active" (click)="navigate.emit()">
+            <i [class]="item.icon" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+        </a>
+        }
+    </nav>
+</aside>

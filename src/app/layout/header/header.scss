@@ -1,0 +1,51 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 28px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+h2 {
+    font-size: 18px;
+    margin: 0 0 4px;
+}
+
+span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+:host ::ng-deep .mobile-menu {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 14px 16px;
+    }
+
+    :host ::ng-deep .mobile-menu {
+        display: inline-flex;
+    }
+
+    .user-info,
+    .header-left span {
+        display: none;
+    }
+}

@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "name": "Carlos Pérez",
+      "email": "carlos@example.com",
+      "role": "Editor",
+      "status": "Inactivo",
+      "id": "1"
+    },
+    {
+      "name": "María López Suarez",
+      "email": "maria@example.com",
+      "role": "Editor",
+      "status": "Activo",
+      "id": "2"
+    },
+    {
+      "name": "Juan Torres",
+      "email": "juan@example.com",
+      "role": "Usuario",
+      "status": "Inactivo",
+      "id": "3"
+    },
+    {
+      "name": "Luis Goyzueta",
+      "email": "goyzueta.luis@gmail.com",
+      "role": "Administrador",
+      "status": "Activo",
+      "id": "wNUGTEJs0I4"
+    },
+    {
+      "name": "Shiriam",
+      "email": "shiriamaraujo@gmail.com",
+      "role": "Administrador",
+      "status": "Activo",
+      "id": "5Wd7rufDHQw"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
