@@ -124,10 +124,8 @@ export class UserStore {
           this._users.set(users);
           this._loaded.set(true);
         },
-
         error: (error: HttpErrorResponse) => {
           this._error.set('No se pudieron cargar los usuarios.');
-
           callbacks?.onError?.(error);
         },
       });
