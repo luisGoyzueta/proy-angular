@@ -34,6 +34,13 @@
       "role": "Administrador",
       "status": "Activo",
       "id": "5Wd7rufDHQw"
+    },
+    {
+      "name": "Liz Pamela",
+      "email": "pamela@gmail.com",
+      "role": "Usuario",
+      "status": "Inactivo",
+      "id": "Zvdn00Ecb-4"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

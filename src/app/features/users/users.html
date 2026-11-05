@@ -19,8 +19,8 @@
       [value]="filteredUsers()"
       [loading]="loading()"
       [paginator]="true"
-      [rows]="5"
-      [rowsPerPageOptions]="[5, 10, 20]"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 30]"
       [tableStyle]="{ 'min-width': '750px' }"
     >
       <!-- BUSCADOR -->
@@ -33,7 +33,7 @@
               pInputText
               type="search"
               [ngModel]="search()"
-              (ngModelChange)="search.set($event)"
+              (ngModelChange)="setSearch($event)"
               placeholder="Buscar usuario..."
             />
           </div>
@@ -132,7 +132,7 @@
 <app-user-form
   [visible]="dialogVisible()"
   [user]="selectedUser()"
-  (visibleChange)="dialogVisible.set($event)"
+  (visibleChange)="setDialogVisible($event)"
   (save)="saveUser($event)"
 />
 

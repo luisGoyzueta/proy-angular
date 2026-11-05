@@ -1,38 +1,53 @@
 <section class="dashboard">
-    <div class="page-heading">
-        <h1>Dashboard</h1>
-        <p>Resumen general de tu negocio</p>
-    </div>
+  <div class="page-heading">
+    <h1>Dashboard</h1>
+    <p>Resumen general de tu negocio</p>
+  </div>
 
-    <div class="stats-grid">
-        @for (stat of stats; track stat.title) {
-        <article class="stat-card">
-            <div class="stat-top">
-                <span>{{ stat.title }}</span>
-                <i [class]="stat.icon" aria-hidden="true"></i>
-            </div>
-
-            <h2>
-                @if (stat.currency) {
-                S/ {{ stat.value | number }}
-                } @else {
-                {{ stat.value | number }}
-                }
-            </h2>
-
-            <span class="positive">
-                {{ stat.change }} respecto al mes anterior
-            </span>
-        </article>
-        }
-    </div>
-
-    <section class="chart-card">
-        <h2>Resumen de ventas</h2>
-        <p>Evolución de los últimos seis meses</p>
-
-        <div class="chart-container">
-            <p-chart type="line" [data]="chartData" [options]="chartOptions" />
+  <div class="stats-grid">
+    @for (stat of stats; track stat.title) {
+      <article class="stat-card">
+        <div class="stat-top">
+          <span>{{ stat.title }}</span>
+          <i [class]="stat.icon" aria-hidden="true"></i>
         </div>
-    </section>
+
+        <h2>
+          @if (stat.currency) {
+            S/ {{ stat.value | number }}
+          } @else {
+            {{ stat.value | number }}
+          }
+        </h2>
+
+        <span class="positive"> {{ stat.change }} respecto al mes anterior </span>
+      </article>
+    }
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <span>Total de usuarios</span>
+      <strong>{{ totalUsers() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Usuarios activos</span>
+      <strong>{{ activeUsers() }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Usuarios inactivos</span>
+      <strong>{{ inactiveUsers() }}</strong>
+    </div>
+  </div>
+
+  <section class="chart-card">
+    <h2>Resumen de ventas</h2>
+    <p>Evolución de los últimos seis meses</p>
+
+    <div class="chart-container">
+      <p-chart type="line" [data]="chartData" [options]="chartOptions" />
+    </div>
+  </section>
 </section>

@@ -76,3 +76,16 @@
         grid-template-columns: 1fr;
     }
 }
+
+.dashboard-stats {
+    display: flex;
+    flex: 1 1 100%;
+    gap: 24px;
+    margin-bottom: 24px;
+    .stat-card {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: row;
+      gap: 12px;
+    }
+}
