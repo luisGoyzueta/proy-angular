@@ -5,12 +5,14 @@
       <h1>Gestión de usuarios</h1>
       <p>Administra los usuarios registrados en el sistema</p>
     </div>
-    <p-button
-      label="Nuevo usuario"
-      icon="pi pi-plus"
-      [disabled]="saving() || deleting()"
-      (onClick)="openCreate()"
-    />
+    @if (canCreate()) {
+      <p-button
+        label="Nuevo usuario"
+        icon="pi pi-plus"
+        [disabled]="saving() || deleting()"
+        (onClick)="openCreate()"
+      />
+    }
   </div>
 
   <!-- TABLA -->
@@ -83,24 +85,28 @@
           <!-- BOTONES DE ACCIONES -->
           <td>
             <div class="actions">
-              <p-button
-                icon="pi pi-pencil"
-                severity="info"
-                [text]="true"
-                [rounded]="true"
-                ariaLabel="Editar usuario"
-                (onClick)="openEdit(user)"
-              />
-              <p-button
-                icon="pi pi-trash"
-                severity="danger"
-                [text]="true"
-                [rounded]="true"
-                [disabled]="deleting() !== null"
-                [loading]="deleting() === user.id"
-                ariaLabel="Eliminar usuario"
-                (onClick)="confirmDelete(user)"
-              />
+              @if (canEdit()) {
+                <p-button
+                  icon="pi pi-pencil"
+                  severity="info"
+                  [text]="true"
+                  [rounded]="true"
+                  ariaLabel="Editar usuario"
+                  (onClick)="openEdit(user)"
+                />
+              }
+              @if (canDelete()) {
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [text]="true"
+                  [rounded]="true"
+                  [disabled]="deleting() !== null"
+                  [loading]="deleting() === user.id"
+                  ariaLabel="Eliminar usuario"
+                  (onClick)="confirmDelete(user)"
+                />
+              }
             </div>
           </td>
         </tr>

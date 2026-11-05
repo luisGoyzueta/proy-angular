@@ -19,21 +19,69 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this._currentUser() !== null);
   readonly isAdmin = computed(() => this._currentUser()?.role === 'Administrador');
 
+  // login(email: string, password: string): boolean {
+  //   // Credenciales ficticias, solo para practicar
+  //   if (email.trim().toLowerCase() !== 'admin@demo.com' || password !== 'Admin123!') {
+  //     return false;
+  //   }
+
+  //   const user: AuthUser = {
+  //     id: 'demo-admin',
+  //     name: 'Administrador Demo',
+  //     email: 'admin@demo.com',
+  //     role: 'Administrador',
+  //   };
+
+  //   this._currentUser.set(user);
+  //   sessionStorage.setItem(this.sessionKey, JSON.stringify(user));
+  //   return true;
+  // }
+
   login(email: string, password: string): boolean {
-    // Credenciales ficticias, solo para practicar
-    if (email.trim().toLowerCase() !== 'admin@demo.com' || password !== 'Admin123!') {
-      return false;
-    }
+    const demoAccounts: Array<{
+      email: string;
+      password: string;
+      user: AuthUser;
+    }> = [
+      {
+        email: 'admin@demo.com',
+        password: 'Admin123!',
+        user: {
+          id: 'demo-admin',
+          name: 'Administrador Demo',
+          email: 'admin@demo.com',
+          role: 'Administrador',
+        },
+      },
+      {
+        email: 'editor@demo.com',
+        password: 'Editor123!',
+        user: {
+          id: 'demo-editor',
+          name: 'Editor Demo',
+          email: 'editor@demo.com',
+          role: 'Editor',
+        },
+      },
+      {
+        email: 'usuario@demo.com',
+        password: 'Usuario123!',
+        user: {
+          id: 'demo-user',
+          name: 'Usuario Demo',
+          email: 'usuario@demo.com',
+          role: 'Usuario',
+        },
+      },
+    ];
 
-    const user: AuthUser = {
-      id: 'demo-admin',
-      name: 'Administrador Demo',
-      email: 'admin@demo.com',
-      role: 'Administrador',
-    };
+    const account = demoAccounts.find(
+      (item) => item.email === email.trim().toLowerCase() && item.password === password,
+    );
 
-    this._currentUser.set(user);
-    sessionStorage.setItem(this.sessionKey, JSON.stringify(user));
+    if (!account) return false;
+    this._currentUser.set(account.user);
+    sessionStorage.setItem(this.sessionKey, JSON.stringify(account.user));
     return true;
   }
 
@@ -59,23 +107,36 @@ export class AuthService {
       }
 
       // Validar los datos de la sesión
-      const user = parsed as Record<string, unknown>;
-      if (
-        user['id'] !== 'demo-admin' ||
-        user['name'] !== 'Administrador Demo' ||
-        user['email'] !== 'admin@demo.com' ||
-        user['role'] !== 'Administrador'
-      ) {
-        return null;
-      }
+      const demoUsers: AuthUser[] = [
+        {
+          id: 'demo-admin',
+          name: 'Administrador Demo',
+          email: 'admin@demo.com',
+          role: 'Administrador',
+        },
+        {
+          id: 'demo-editor',
+          name: 'Editor Demo',
+          email: 'editor@demo.com',
+          role: 'Editor',
+        },
+        {
+          id: 'demo-user',
+          name: 'Usuario Demo',
+          email: 'usuario@demo.com',
+          role: 'Usuario',
+        },
+      ];
 
-      //return user as unknown as AuthUser;
-      return {
-        id: 'demo-admin',
-        name: 'Administrador Demo',
-        email: 'admin@demo.com',
-        role: 'Administrador',
-      };
+      return (
+        demoUsers.find(
+          (user) =>
+            user.id === (parsed as AuthUser).id &&
+            user.email === (parsed as AuthUser).email &&
+            user.name === (parsed as AuthUser).name &&
+            user.role === (parsed as AuthUser).role,
+        ) ?? null
+      );
     } catch {
       return null;
     }

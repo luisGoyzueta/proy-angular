@@ -165,7 +165,7 @@ export class UserStore {
           this._dialogVisible.set(false);
           this._selectedUser.set(null);
           callbacks?.onSuccess?.(isEditing);
-          this.loadUsers();
+          this.loadUsers(undefined, true);
         },
         error: (error: HttpErrorResponse) => callbacks?.onError?.(error),
       });
@@ -191,7 +191,7 @@ export class UserStore {
       .subscribe({
         next: () => {
           callbacks?.onSuccess?.();
-          this.loadUsers();
+          this.loadUsers(undefined, true);
         },
         error: (error: HttpErrorResponse) => callbacks?.onError?.(error),
       });

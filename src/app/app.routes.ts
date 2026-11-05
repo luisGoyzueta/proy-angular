@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { authGuard } from './core/guards/auth-guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { permissionGuard } from './core/guards/permission-guard';
 
 export const routes: Routes = [
   {
@@ -13,6 +13,7 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [authGuard],
+    canActivateChild: [authGuard],
     loadComponent: () => import('./layout/admin-layout/admin-layout').then((m) => m.AdminLayout),
     children: [
       {
@@ -22,17 +23,20 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        title: 'Dashboard',
+        canActivate: [permissionGuard],
+        data: { permission: 'dashboard.view' },
         loadComponent: () => import('./features/dashboard/dashboard').then((m) => m.Dashboard),
       },
       {
         path: 'users',
-        title: 'Usuarios',
+        canActivate: [permissionGuard],
+        data: { permission: 'users.view' },
         loadComponent: () => import('./features/users/users').then((m) => m.Users),
       },
       {
         path: 'settings',
-        title: 'Configuración',
+        canActivate: [permissionGuard],
+        data: { permission: 'settings.view' },
         loadComponent: () => import('./features/settings/settings').then((m) => m.Settings),
       },
     ],

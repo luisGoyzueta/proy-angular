@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, computed } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +13,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserForm } from './user-form/user-form';
 import { User, UserFormValue } from './user.model';
 import { UserStore } from './store/user-store';
+
+import { PermissionService } from '../../core/services/permission';
 
 @Component({
   selector: 'app-users',
@@ -49,6 +51,11 @@ export class Users implements OnInit {
   readonly dialogVisible = this.store.dialogVisible;
   readonly selectedUser = this.store.selectedUser;
 
+  readonly permissions = inject(PermissionService);
+  readonly canCreate = computed(() => this.permissions.has('users.create'));
+  readonly canEdit = computed(() => this.permissions.has('users.edit'));
+  readonly canDelete = computed(() => this.permissions.has('users.delete'));
+
   // INICIALIZACIÓN
   ngOnInit(): void {
     this.loadUsers();
@@ -71,22 +78,34 @@ export class Users implements OnInit {
 
   // ABRIR MODAL NUEVO USUARIO
   openCreate(): void {
+    if (!this.canCreate()) return;
     this.store.openCreate();
   }
 
   // ABRIR MODAL EDITAR USUARIO
   openEdit(user: User): void {
+    if (!this.canEdit()) return;
     this.store.openEdit(user);
   }
 
   // REGISTRAR O ACTUALIZAR USUARIO
   saveUser(data: UserFormValue): void {
-    // Evitar guardados simultáneos
+    // Obtener el usuario seleccionado desde el Signal
+    const currentUser = this.selectedUser();
+    const editing = currentUser !== null;
+
+    // Verificar permisos
+    if (editing && !this.canEdit()) return;
+    if (!editing && !this.canCreate()) return;
+
+    // Evitar operaciones simultáneas
     if (this.saving()) return;
 
-    // NORMALIZAR EL CORREO
-    const userData = data.email.trim().toLowerCase();
-    if (this.store.checkEmailExists(userData, this.selectedUser()?.id)) {
+    // Normalizar correo
+    const email = data.email.trim().toLowerCase();
+
+    // Verificar duplicados
+    if (this.store.checkEmailExists(email, currentUser?.id)) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Correo duplicado',
@@ -95,21 +114,24 @@ export class Users implements OnInit {
       return;
     }
 
-    // DETERMINAR SI ES CREACIÓN O EDICIÓN
+    // Delegar guardado al Store
     this.store.saveUser(data, {
-      onSuccess: (editing) => {
+      onSuccess: (isEditing) => {
         this.messageService.add({
           severity: 'success',
-          summary: editing ? 'Usuario actualizado' : 'Usuario registrado',
+          summary: isEditing ? 'Usuario actualizado' : 'Usuario registrado',
           detail: 'La operación se realizó correctamente.',
         });
       },
-      onError: (error) => this.showError(error, 'No se pudo guardar el usuario.'),
+      onError: (error) => {
+        this.showError(error, 'No se pudo guardar el usuario.');
+      },
     });
   }
 
   // CONFIRMAR ELIMINACIÓN
   confirmDelete(user: User): void {
+    if (!this.canDelete()) return;
     if (this.deleting() !== null || this.saving()) return;
 
     this.confirmationService.confirm({
@@ -126,6 +148,7 @@ export class Users implements OnInit {
 
   // ELIMINAR USUARIO DESDE LA API
   private deleteUser(id: string): void {
+    if (!this.canDelete()) return;
     if (this.deleting() !== null || this.saving()) return;
 
     this.store.deleteUser(id, {
