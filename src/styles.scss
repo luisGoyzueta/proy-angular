@@ -1,31 +1,67 @@
 /* You can add global styles to this file, and also import other style files */
-@import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
 
 :root {
-    font-family: Inter, Arial, sans-serif;
-    color: #1e293b;
-    background: #f5f7fb;
+  font-family: Inter, Arial, sans-serif;
+  color: #1e293b;
+  background: #f5f7fb;
 }
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    min-width: 320px;
+  margin: 0;
+  min-width: 320px;
 }
 
 button,
 input {
-    font: inherit;
+  font: inherit;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 :focus-visible {
-    outline: 3px solid #818cf8;
-    outline-offset: 3px;
+  outline: 3px solid #818cf8;
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+  Botones principales accesibles (WCAG 2.2 AA)
+========================================================================== */
+.login-submit-button,
+.user-save-button,
+.new-user-button,
+.save-user-button {
+  &.p-button,
+  & .p-button {
+    background: #047857 !important;
+    border-color: #047857 !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+
+    .p-button-label,
+    .p-button-icon {
+      color: #ffffff !important;
+      transition: none !important;
+      animation: none !important;
+    }
+
+    &:hover {
+      background: #065f46 !important;
+      border-color: #065f46 !important;
+      color: #ffffff !important;
+    }
+
+    &:focus-visible {
+      outline: 3px solid #064e3b !important;
+      outline-offset: 3px !important;
+    }
+  }
 }

@@ -47,7 +47,13 @@
     <p>Evolución de los últimos seis meses</p>
 
     <div class="chart-container">
-      <p-chart type="line" [data]="chartData" [options]="chartOptions" />
+      <p-chart
+        appAccessibleChart
+        chartLabel="Gráfico de líneas que muestra la evolución de ventas de los últimos seis meses"
+        type="line"
+        [data]="chartData"
+        [options]="chartOptions"
+      />
     </div>
   </section>
 </section>

@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { UserStore } from '../users/store/user-store';
+import { AccessibleChart } from '../../shared/directives/accessible-chart';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DecimalPipe, ChartModule],
+  imports: [DecimalPipe, ChartModule, AccessibleChart],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

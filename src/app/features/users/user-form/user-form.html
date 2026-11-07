@@ -9,6 +9,8 @@
   [dismissableMask]="false"
   [style]="{ width: '550px', maxWidth: '95vw' }"
   [breakpoints]="{ '640px': '95vw' }"
+  [closeButtonProps]="{ ariaLabel: 'Cerrar formulario' }"
+  styleClass="user-save-button"
 >
   <form
     id="userForm"
@@ -126,6 +128,7 @@
         [label]="isEditing() ? 'Actualizar' : 'Guardar usuario'"
         icon="pi pi-check"
         (onClick)="submit()"
+        styleClass="save-user-button"
       />
     </div>
   </ng-template>
