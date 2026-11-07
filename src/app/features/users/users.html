@@ -7,6 +7,7 @@
     </div>
     @if (canCreate()) {
       <p-button
+        data-testid="new-user-button"
         label="Nuevo usuario"
         icon="pi pi-plus"
         [disabled]="saving() || deleting()"
@@ -21,6 +22,7 @@
       [value]="filteredUsers()"
       [loading]="loading()"
       [paginator]="true"
+      data-testid="users-table"
       [rows]="10"
       [rowsPerPageOptions]="[10, 20, 30]"
       [tableStyle]="{ 'min-width': '750px' }"
@@ -91,12 +93,14 @@
                   severity="info"
                   [text]="true"
                   [rounded]="true"
+                  data-testid="edit-user-button"
                   ariaLabel="Editar usuario"
                   (onClick)="openEdit(user)"
                 />
               }
               @if (canDelete()) {
                 <p-button
+                  data-testid="delete-user-button"
                   icon="pi pi-trash"
                   severity="danger"
                   [text]="true"
