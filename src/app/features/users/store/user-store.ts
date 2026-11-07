@@ -13,6 +13,8 @@ export class UserStore {
   private readonly userService = inject(UserService);
   private readonly destroyRef = inject(DestroyRef);
 
+  private requestVersion = 0;
+
   // ESTADOS PRIVADOS (MUTABLES)
   private readonly _users = signal<User[]>([]);
   private readonly _loading = signal<boolean>(false);
@@ -57,6 +59,19 @@ export class UserStore {
         user.status.toLowerCase().includes(term),
     );
   });
+
+  reset(): void {
+    this.requestVersion++;
+    this._users.set([]);
+    this._loading.set(false);
+    this._saving.set(false);
+    this._deleting.set(null);
+    this._search.set('');
+    this._dialogVisible.set(false);
+    this._selectedUser.set(null);
+    this._error.set(null);
+    this._loaded.set(false);
+  }
 
   // MUTACIONES DIRECTAS DE ESTADO LOCAL
   setSearch(term: string): void {
@@ -113,18 +128,34 @@ export class UserStore {
     this._loading.set(true);
     this._error.set(null);
 
+    // 1. CAPTURAR LA VERSIÓN ACTUAL ANTES DE LA PETICIÓN
+    const version = this.requestVersion;
+
     this.userService
       .getUsers()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        finalize(() => this._loading.set(false)),
+        finalize(() => {
+          // Solo apagar loading si sigue siendo la petición vigente
+          if (version === this.requestVersion) {
+            this._loading.set(false);
+          }
+        }),
       )
       .subscribe({
         next: (users) => {
+          // 1. VERIFICAR SI LA VERSIÓN ES LA MÁS RECENTE
+          if (version !== this.requestVersion) {
+            return;
+          }
           this._users.set(users);
           this._loaded.set(true);
         },
         error: (error: HttpErrorResponse) => {
+          // 2. DESCARTAR ERROR SI LA VERSIÓN YA NO ES VIGENTE
+          if (version !== this.requestVersion) {
+            return;
+          }
           this._error.set('No se pudieron cargar los usuarios.');
           callbacks?.onError?.(error);
         },

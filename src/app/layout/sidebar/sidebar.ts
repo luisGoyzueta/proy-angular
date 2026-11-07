@@ -1,6 +1,15 @@
 import { Component, computed, output, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PermissionService } from '../../core/services/permission';
+import { Permission } from '../../core/models/permission.model';
+
+interface MenuItem {
+  label: string;
+  icon: string;
+  route: string;
+  permission?: Permission;
+}
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -11,7 +20,7 @@ import { PermissionService } from '../../core/services/permission';
 export class Sidebar {
   readonly navigate = output<void>();
   readonly permissions = inject(PermissionService);
-  readonly menuItems = [
+  readonly menuItems: readonly MenuItem[] = [
     {
       label: 'Dashboard',
       icon: 'pi pi-home',
@@ -32,7 +41,7 @@ export class Sidebar {
     },
   ];
 
-  // readonly visibleMenuItems = computed(() =>
-  //   this.menuItems.filter((item) => this.permissions.has(item.permission)),
-  // );
+  readonly visibleMenuItems = computed(() =>
+    this.menuItems.filter((item) => !item.permission || this.permissions.has(item.permission)),
+  );
 }

@@ -7,6 +7,8 @@ import { PasswordModule } from 'primeng/password';
 import { MessageModule } from 'primeng/message';
 
 import { AuthService } from '../../../core/services/auth';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +23,7 @@ export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+
   readonly loading = signal(false);
   readonly errorMessage = signal('');
 
@@ -31,25 +34,41 @@ export class Login {
 
   submit(): void {
     this.form.markAllAsTouched();
+
     if (this.form.invalid || this.loading()) {
       return;
     }
+
     this.loading.set(true);
     this.errorMessage.set('');
-    const { email, password } = this.form.getRawValue();
-    const success = this.authService.login(email, password);
-    this.loading.set(false);
 
-    if (!success) {
-      this.errorMessage.set('El correo electrónico o la contraseña son incorrectos.');
-      return;
-    }
+    const credentials = this.form.getRawValue();
 
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    const destination =
-      returnUrl?.startsWith('/') && !returnUrl.startsWith('//') && !returnUrl.startsWith('/\\')
-        ? returnUrl
-        : '/dashboard';
-    void this.router.navigateByUrl(destination);
+    this.authService
+      .login(credentials)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
+          const destination =
+            returnUrl?.startsWith('/') &&
+            !returnUrl.startsWith('//') &&
+            !returnUrl.startsWith('/\\')
+              ? returnUrl
+              : '/dashboard';
+
+          void this.router.navigateByUrl(destination);
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.errorMessage.set('Correo electrónico o contraseña incorrectos.');
+          } else if (error.status === 429) {
+            this.errorMessage.set('Demasiados intentos. Inténtalo más tarde.');
+          } else {
+            this.errorMessage.set('No se pudo iniciar sesión. Verifica la conexión.');
+          }
+        },
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { AuthRole } from '../services/auth';
+import type { AuthRole } from '../models/auth.model';
 import { Permission } from '../models/permission.model';
 
 export const ROLE_PERMISSIONS: Record<AuthRole, readonly Permission[]> = {

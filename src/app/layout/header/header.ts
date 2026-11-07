@@ -6,6 +6,8 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 
+import { SessionCleanupService } from '../../core/services/session-cleanup';
+
 
 @Component({
   selector: 'app-header',
@@ -18,9 +20,22 @@ export class Header {
 
   readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly cleanup = inject(SessionCleanupService);
 
   logout(): void {
-    this.authService.logout();
-    void this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => {
+        this.cleanup.clear();
+        void this.router.navigate(['/login']);
+      },
+      error: () => {
+        // La sesión remota podría seguir vigente.
+        // No afirmamos que se haya cerrado correctamente.
+        console.error('No se pudo cerrar la sesión.');
+
+        // Aquí puedes mostrar un Toast de error
+        // y permitir que el usuario vuelva a intentarlo.
+      },
+    });
   }
 }
