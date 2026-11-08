@@ -33,6 +33,17 @@ jobs:
           node-version: '24'
           cache: npm
 
+      - name: Diagnosticar dependencias
+    run: |
+      node --version
+      npm --version
+      npm config get omit
+      npm config get legacy-peer-deps
+      node -e "const p=require('./package-lock.json'); for(const n of ['@emnapi/core','@emnapi/runtime']) console.log(n, p.packages?.['node_modules/'+n] ?? 'NO EXISTE')"
+
+      - name: Instalar dependencias
+      run: npm ci
+
       - name: Instalar dependencias Angular
         run: npm ci
 
