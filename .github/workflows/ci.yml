@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - master
-
   pull_request:
     branches:
       - master
@@ -32,6 +31,7 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+          cache-dependency-path: package-lock.json
 
       - name: Instalar dependencias Angular
         run: npm ci
@@ -47,6 +47,7 @@ jobs:
         with:
           name: angular-production-build
           path: dist/
+          if-no-files-found: error
           retention-days: 7
 
   # ======================================
@@ -59,7 +60,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: backend
+        working-directory: proyecto-api
 
     steps:
       - name: Descargar repositorio
@@ -70,7 +71,7 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: proyecto-api/package-lock.json
 
       - name: Instalar dependencias Express
         run: npm ci
@@ -97,45 +98,34 @@ jobs:
       E2E_PASSWORD: E2E-Test-Password-2026!
 
     steps:
-      # Descargar código
-
       - name: Descargar repositorio
         uses: actions/checkout@v4
-
-      # Instalar Node.js
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
-
-      # Instalar Angular
+          cache-dependency-path: |
+            package-lock.json
+            proyecto-api/package-lock.json
 
       - name: Instalar dependencias Angular
         run: npm ci
 
-      # Instalar Express
-
       - name: Instalar dependencias Express
-        working-directory: backend
+        working-directory: proyecto-api
         run: npm ci
-
-      # Instalar navegador Chromium
 
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
 
-      # Crear cuenta de administrador E2E
-
       - name: Crear cuenta de pruebas E2E
-        working-directory: backend
+        working-directory: proyecto-api
         run: npx tsx src/tests/seed-e2e.ts
 
-      # Iniciar Express
-
       - name: Iniciar API Express
-        working-directory: backend
+        working-directory: proyecto-api
         run: |
           npm run dev > /tmp/express-e2e.log 2>&1 &
           echo $! > /tmp/express-e2e.pid
@@ -150,17 +140,14 @@ jobs:
             sleep 2
           done
 
+          echo "ERROR: API Express no disponible"
           cat /tmp/express-e2e.log
           exit 1
-
-      # Ejecutar pruebas Playwright
 
       - name: Ejecutar pruebas E2E
         run: npm run test:e2e
         env:
           CI: 'true'
-
-      # Guardar logs si falla Express
 
       - name: Guardar logs de Express
         if: failure()
@@ -169,8 +156,7 @@ jobs:
           name: express-e2e-logs
           path: /tmp/express-e2e.log
           if-no-files-found: ignore
-
-      # Guardar informes Playwright
+          retention-days: 7
 
       - name: Guardar informe Playwright
         if: always()
