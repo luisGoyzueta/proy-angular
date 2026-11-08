@@ -1,3 +1,4 @@
+import { randomBytes, scryptSync, randomUUID } from "node:crypto";
 import { db } from "./db.js";
 
 export function initializeAuthDatabase(): void {
@@ -31,4 +32,23 @@ export function initializeAuthDatabase(): void {
     CREATE INDEX IF NOT EXISTS idx_sessions_expiry
       ON sessions(expires_at);
   `);
+
+  // Sembrar cuenta inicial de demostración si la base de datos está vacía
+  const countRow = db.prepare("SELECT count(*) as count FROM auth_accounts").get() as { count: number } | undefined;
+  if (!countRow || countRow.count === 0) {
+    const salt = randomBytes(16).toString("hex");
+    const key = scryptSync("Admin123!", salt, 64).toString("hex");
+    const passwordHash = `${salt}:${key}`;
+    const adminId = randomUUID();
+
+    db.prepare(`
+      INSERT OR IGNORE INTO auth_accounts (id, name, email, password_hash, role, status)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(adminId, "Administrador", "admin@demo.com", passwordHash, "Administrador", "Activo");
+
+    db.prepare(`
+      INSERT OR IGNORE INTO users (id, name, email, role, status)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(adminId, "Administrador", "admin@demo.com", "Administrador", "Activo");
+  }
 }

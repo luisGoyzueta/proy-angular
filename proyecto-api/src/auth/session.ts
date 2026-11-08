@@ -6,13 +6,23 @@ export const SESSION_COOKIE = "app_session";
 
 const SESSION_DURATION_MS = 1000 * 60 * 60 * 8;
 
-export const sessionCookieOptions: CookieOptions = {
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+export const sessionCookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
-  path: "/",
-  maxAge: SESSION_DURATION_MS,
+  secure: isProduction,
+  sameSite: 'lax' as const,
+  path: '/',
 };
+
+// export const sessionCookieOptions: CookieOptions = {
+//   httpOnly: true,
+//   secure: process.env.NODE_ENV === "production",
+//   sameSite: "lax",
+//   path: "/",
+//   maxAge: SESSION_DURATION_MS,
+// };
 
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");

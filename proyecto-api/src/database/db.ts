@@ -29,9 +29,13 @@
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const databasePath =
-  process.env.DATABASE_PATH ?? join(process.cwd(), "data", "database.sqlite");
+  process.env.DATABASE_PATH ?? join(__dirname, "../../data/database.sqlite");
 
 if (databasePath !== ":memory:") {
   mkdirSync(dirname(databasePath), {
