@@ -42,3 +42,27 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Dependencias Angular y Express
+node_modules/
+**/node_modules/
+
+# Compilaciones
+dist/
+**/dist/
+coverage/
+**/coverage/
+
+# Variables privadas
+.env
+.env.*
+!.env.example
+
+# Bases de datos SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Resultados de pruebas
+test-results/
+playwright-report/
