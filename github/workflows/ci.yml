@@ -4,11 +4,13 @@ name: Angular Full Stack CI
 on:
   push:
     branches:
-      - main
+      - master
 
   pull_request:
     branches:
-      - main
+      - master
+
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,14 +23,14 @@ jobs:
 
   frontend:
     name: Angular - Tests y Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Descargar repositorio
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: npm
@@ -55,22 +57,22 @@ jobs:
 
   backend:
     name: Express - Tests de Integración
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     defaults:
       run:
-        working-directory: backend
+        working-directory: proyecto-api
 
     steps:
       - name: Descargar repositorio
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: proyecto-api/package-lock.json
 
       - name: Instalar dependencias Express
         run: npm ci
@@ -79,12 +81,12 @@ jobs:
         run: npm test
 
   # ======================================
-  # 3. E2E - PLAYWRIGHT
+  # 3. E2E - PLAYWRIGHT + ACCESIBILIDAD
   # ======================================
 
   e2e:
     name: Playwright - E2E y Accesibilidad
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     needs:
       - frontend
@@ -97,45 +99,31 @@ jobs:
       E2E_PASSWORD: E2E-Test-Password-2026!
 
     steps:
-      # Descargar código
-
       - name: Descargar repositorio
-        uses: actions/checkout@v5
-
-      # Instalar Node.js
+        uses: actions/checkout@v6
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: npm
 
-      # Instalar Angular
-
       - name: Instalar dependencias Angular
         run: npm ci
 
-      # Instalar Express
-
       - name: Instalar dependencias Express
-        working-directory: backend
+        working-directory: proyecto-api
         run: npm ci
-
-      # Instalar navegador Chromium
 
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
 
-      # Crear cuenta de administrador E2E
-
       - name: Crear cuenta de pruebas E2E
-        working-directory: backend
+        working-directory: proyecto-api
         run: npx tsx src/tests/seed-e2e.ts
 
-      # Iniciar Express
-
       - name: Iniciar API Express
-        working-directory: backend
+        working-directory: proyecto-api
         run: |
           npm run dev > /tmp/express-e2e.log 2>&1 &
           echo $! > /tmp/express-e2e.pid
@@ -153,14 +141,10 @@ jobs:
           cat /tmp/express-e2e.log
           exit 1
 
-      # Ejecutar pruebas Playwright
-
       - name: Ejecutar pruebas E2E
         run: npm run test:e2e
         env:
           CI: 'true'
-
-      # Guardar logs si falla Express
 
       - name: Guardar logs de Express
         if: failure()
@@ -169,8 +153,6 @@ jobs:
           name: express-e2e-logs
           path: /tmp/express-e2e.log
           if-no-files-found: ignore
-
-      # Guardar informes Playwright
 
       - name: Guardar informe Playwright
         if: always()
