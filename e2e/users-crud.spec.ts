@@ -2,8 +2,6 @@ import { test, expect, type Page } from '@playwright/test';
 
 import { loginAsAdmin } from './helpers/auth';
 
-const API_URL = 'http://localhost:3000/api';
-
 async function selectPrimeOption(page: Page, testId: string, option: string): Promise<void> {
   await page.getByTestId(testId).click();
 
@@ -72,14 +70,16 @@ test.describe('CRUD de usuarios E2E', () => {
 
     await page.getByTestId('user-name').fill(updatedName);
 
-    const updateResponse = page.waitForResponse(
-      (response) =>
-        response.url() === `${API_URL}/users/${userId}` && response.request().method() === 'PUT',
-    );
+    const [updated] = await Promise.all([
+      page.waitForResponse(
+        (response) =>
+          new URL(response.url()).pathname === `/api/users/${userId}` &&
+          response.request().method() === 'PUT',
+        { timeout: 10000 },
+      ),
 
-    await page.getByTestId('save-user-button').click();
-
-    const updated = await updateResponse;
+      page.getByTestId('save-user-button').click(),
+    ]);
 
     expect(updated.status()).toBe(200);
 

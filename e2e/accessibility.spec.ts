@@ -57,7 +57,7 @@ test.describe('Accesibilidad WCAG 2.2', () => {
       };
     });
 
-    console.log('ESTILOS BOTÓN GUARDAR:', styles);
+    //console.log('ESTILOS BOTÓN GUARDAR:', styles);
 
     await checkAccessibility(page);
 
