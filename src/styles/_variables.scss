@@ -1,0 +1,71 @@
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto/Roboto-Thin.ttf);
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto/Roboto-Light.ttf);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto/Roboto-Regular.ttf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto/Roboto-Medium.ttf);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(../fonts/Roboto/Roboto-Bold.ttf);
+  font-weight: 700;
+}
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/montserrat/Montserrat-Light.ttf);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/montserrat/Montserrat-Regular.ttf);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/montserrat/Montserrat-Medium.ttf);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/montserrat/Montserrat-Bold.ttf);
+  font-weight: 700;
+}
+$typeFontPri: 'Montserrat';
+$typeFontSec: 'Roboto';
+
+// colors
+$primary-color: #ce0e2d;
+$secondary-color: #2a374b;
+$tertiary-color: #f7f7f6;
+$white-color: #ffffff;
+$black-color: #000000;
+
+
+:root {
+  --primary-font: 'Montserrat', Verdana, sans-serif;
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --tertiary-color: #{$tertiary-color};
+  --white-color: #{$white-color};
+  --black-color: #{$black-color};
+}

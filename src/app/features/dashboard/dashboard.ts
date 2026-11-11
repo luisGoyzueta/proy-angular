@@ -2,17 +2,21 @@ import { Component, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { UserStore } from '../users/store/user-store';
+import { ProductStore } from '../products/store/product-store';
 import { AccessibleChart } from '../../shared/directives/accessible-chart';
+import { CurrencyPipe } from '@angular/common';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [DecimalPipe, ChartModule, AccessibleChart],
+  imports: [DecimalPipe, CurrencyPipe, ChartModule, AccessibleChart, TagModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   ngOnInit(): void {
     this.userStore.loadUsers();
+    this.productStore.loadProducts();
   }
 
   stats = [
@@ -69,8 +73,12 @@ export class Dashboard {
   };
 
   readonly userStore = inject(UserStore);
-
   readonly totalUsers = this.userStore.totalUsers;
   readonly activeUsers = this.userStore.activeUsers;
   readonly inactiveUsers = this.userStore.inactiveUsers;
+
+  readonly productStore = inject(ProductStore);
+  readonly totalProducts = this.productStore.totalProducts;
+  readonly activeProducts = this.productStore.activeProducts;
+  readonly inactiveProducts = this.productStore.inactiveProducts;
 }

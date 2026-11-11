@@ -40,6 +40,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/settings/settings').then((m) => m.Settings),
       },
       {
+        path: 'products',
+        canActivate: [permissionGuard],
+        data: { permission: 'products.view' },
+        loadComponent: () => import('./features/products/products').then((m) => m.Products),
+      },
+      {
         path: 'forbidden',
         loadComponent: () => import('./features/forbidden/forbidden').then((m) => m.Forbidden),
       },

@@ -61,4 +61,14 @@ db.exec(`
     ),
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS products (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    price NUMBER NOT NULL CHECK (price >= 0),
+    status TEXT NOT NULL CHECK (
+      status IN ('Activo', 'Inactivo')
+    ),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
 `);

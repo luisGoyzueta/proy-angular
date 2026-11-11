@@ -9,9 +9,13 @@ export const ROLE_PERMISSIONS: Record<AuthRole, readonly Permission[]> = {
     'users.edit',
     'users.delete',
     'settings.view',
+    'products.view',
+    'products.create',
+    'products.edit',
+    'products.delete',
   ],
 
-  Editor: ['dashboard.view', 'users.view', 'users.edit'],
+  Editor: ['dashboard.view', 'users.view', 'users.edit', 'products.view', 'products.edit'],
 
-  Usuario: ['dashboard.view'],
+  Usuario: ['dashboard.view', 'products.view'],
 };

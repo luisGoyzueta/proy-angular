@@ -1,0 +1,111 @@
+<p-dialog
+  [header]="isEditing() ? 'Editar producto' : 'Nuevo producto'"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  [dismissableMask]="false"
+  [style]="{ width: '550px', maxWidth: '95vw' }"
+  [breakpoints]="{ '640px': '95vw' }"
+  [closeButtonProps]="{ ariaLabel: 'Cerrar formulario' }"
+  styleClass="product-save-button"
+>
+  <form
+    id="productForm"
+    data-testid="product-form"
+    [formGroup]="form"
+    (ngSubmit)="submit()"
+    class="content-form"
+  >
+    <!-- NOMBRE -->
+    <div class="field">
+      <label for="name"> Nombre completo <span class="required">*</span> </label>
+
+      <input
+        id="name"
+        pInputText
+        data-testid="product-name"
+        type="text"
+        formControlName="name"
+        placeholder="Ingresa el nombre completo"
+        aria-required="true"
+        [class.ng-invalid]="form.controls.name.touched && form.controls.name.invalid"
+        [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+        [attr.aria-describedby]="form.controls.name.touched && form.controls.name.invalid ? 'name-error' : null " />
+
+      @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+        <small id="name-error" class="error"> El nombre es obligatorio. </small>
+      } @else if (form.controls.name.touched && form.controls.name.hasError('minlength')) {
+        <small id="name-error" class="error"> El nombre debe tener al menos 3 caracteres. </small>
+      } @else if (form.controls.name.touched && form.controls.name.hasError('maxlength')) {
+        <small id="name-error" class="error"> El nombre no debe superar los 100 caracteres. </small>
+      }
+    </div>
+
+    <!-- PRECIO -->
+    <div class="field">
+      <label for="price"> Precio <span class="required">*</span> </label>
+
+      <input
+        id="price"
+        pInputText
+        data-testid="product-price"
+        type="number"
+        formControlName="price"
+        placeholder="0.00"
+        aria-required="true"
+        [class.ng-invalid]="form.controls.price.touched && form.controls.price.invalid"
+        [attr.aria-invalid]="form.controls.price.touched && form.controls.price.invalid"
+        [attr.aria-describedby]="form.controls.price.touched && form.controls.price.invalid ? 'price-error' : null " />
+
+      @if (form.controls.price.touched && form.controls.price.hasError('required')) {
+        <small id="price-error" class="error"> El precio es obligatorio. </small>
+      } @else if (form.controls.price.touched && form.controls.price.hasError('min')) {
+        <small id="price-error" class="error"> El precio no puede ser negativo. </small>
+      }
+    </div>
+
+    <!-- ROL Y ESTADO -->
+    <div class="form-grid">
+      <div class="field">
+        <label for="status"> Estado <span class="required">*</span> </label>
+        <p-select
+          inputId="status"
+          [options]="statuses"
+          optionLabel="label"
+          optionValue="value"
+          data-testid="product-status"
+          formControlName="status"
+          placeholder="Seleccionar estado"
+          aria-required="true"
+          appendTo="body"
+          styleClass="full-control"
+        />
+      </div>
+    </div>
+  </form>
+
+  <!-- BOTONES -->
+  <ng-template #footer>
+    <div class="dialog-actions">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="close()"
+      />
+
+      <p-button
+        data-testid="save-product-button"
+        type="button"
+        [label]="isEditing() ? 'Actualizar' : 'Guardar producto'"
+        icon="pi pi-check"
+        (onClick)="submit()"
+        styleClass="save-product-button"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

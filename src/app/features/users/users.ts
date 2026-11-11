@@ -18,7 +18,6 @@ import { PermissionService } from '../../core/services/permission';
 
 @Component({
   selector: 'app-users',
-  standalone: true,
   imports: [
     FormsModule,
     TableModule,

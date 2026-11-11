@@ -1,0 +1,137 @@
+<section class="content-page">
+  <!-- ENCABEZADO -->
+  <div class="content-page__header">
+    <div>
+      <h1>Gestión de Productos</h1>
+      <p>Administra los productos registrados en el sistema</p>
+    </div>
+    @if (canCreate()) {
+    <p-button
+      data-testid="new-product-button"
+      label="Nuevo producto"
+      icon="pi pi-box"
+      [disabled]="saving() || deleting()"
+      (onClick)="openCreate()"
+      styleClass="new-product-button"
+    />
+    }
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-card">
+    <p-table
+      [value]="filteredProducts()"
+      [loading]="loading()"
+      [paginator]="true"
+      data-testid="product-table"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 30]"
+      [tableStyle]="{ 'min-width': '750px' }"
+    >
+      <!-- BUSCADOR -->
+      <ng-template #caption>
+        <div class="table-toolbar">
+          <div class="search-container">
+            <label for="search-products">Buscar producto</label>
+            <input
+              id="search-products"
+              pInputText
+              type="search"
+              [ngModel]="search()"
+              (ngModelChange)="setSearch($event)"
+              placeholder="Buscar producto..."
+            />
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- CABECERA -->
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="name">
+            Producto
+            <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="price">
+            Precio
+            <p-sortIcon field="price" />
+          </th>
+          <th pSortableColumn="status">
+            Estado
+            <p-sortIcon field="status" />
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </ng-template>
+
+      <!-- CONTENIDO -->
+      <ng-template #body let-product>
+        <tr>
+          <td>
+            <div class="table-column">
+              <i class="pi pi-box" aria-hidden="true"></i>
+              <span>{{ product.name }}</span>
+            </div>
+          </td>
+          <td>{{ product.price }}</td>
+          <td>
+            <p-tag
+              [value]="product.status"
+              [severity]="product.status === 'Activo' ? 'success' : 'danger'"
+            />
+          </td>
+          <!-- BOTONES DE ACCIONES -->
+          <td>
+            <div class="actions">
+              @if (canEdit()) {
+              <p-button
+                icon="pi pi-pencil"
+                severity="info"
+                [text]="true"
+                [rounded]="true"
+                data-testid="edit-product-button"
+                ariaLabel="Editar producto"
+                (onClick)="openEdit(product)"
+              />
+              }
+              @if (canDelete()) {
+              <p-button
+                data-testid="delete-product-button"
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                [rounded]="true"
+                ariaLabel="Eliminar producto"
+                [disabled]="deleting() !== null"
+                [loading]="deleting() === product.id"
+                (onClick)="confirmDelete(product)"
+              />
+              }
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- SIN RESULTADOS -->
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="empty-message">No se encontraron productos.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</section>
+
+<!-- MODAL REGISTRAR / EDITAR -->
+<app-product-form
+  [visible]="dialogVisible()"
+  [product]="selectedProduct()"
+  (visibleChange)="setDialogVisible($event)"
+  (save)="saveProduct($event)"
+/>
+
+<!-- CONFIRMACIÓN PARA ELIMINAR -->
+<p-confirmDialog />
+
+<!-- NOTIFICACIONES -->
+<p-toast />

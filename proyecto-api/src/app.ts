@@ -6,16 +6,17 @@ import helmet from "helmet";
 
 import "./database/db.js";
 import { usersRouter } from "./routes/users.routes.js";
-import { initializeAuthDatabase } from "./database/auth-db.js";
+import { productsRouter } from './routes/products.routes.js';
+import { initializeAuthDatabase } from './database/auth-db.js';
 
-import cookieParser from "cookie-parser";
-import { authRouter } from "./routes/auth.routes.js";
-import { deleteExpiredSessions } from "./auth/session.js";
+import cookieParser from 'cookie-parser';
+import { authRouter } from './routes/auth.routes.js';
+import { deleteExpiredSessions } from './auth/session.js';
 
-import { csrfProtection } from "./middleware/csrf.middleware.js";
+import { csrfProtection } from './middleware/csrf.middleware.js';
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { getAllowedOrigin } from './config/origin.js';
 
@@ -72,6 +73,7 @@ app.use('/api/auth', authRouter);
 
 // 8. Rutas de usuarios
 app.use('/api/users', usersRouter);
+app.use('/api/products', productsRouter);
 
 // 9. Manejar rutas /api no encontradas
 app.use('/api', (_req, res) => {

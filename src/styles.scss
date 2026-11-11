@@ -1,3 +1,8 @@
+@use 'styles/variables';
+@use 'styles/buttons';
+@use 'styles/forms';
+@use 'styles/tables';
+
 /* You can add global styles to this file, and also import other style files */
 @import 'primeicons/primeicons.css';
 
@@ -64,4 +69,58 @@ a {
       outline-offset: 3px !important;
     }
   }
+}
+
+/* ==========================================================================
+  Header de página y formularios de contenido
+========================================================================== */
+
+.content-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 12px 0;
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.content-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 12px 0;
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+    input {
+      width: 100%;
+      min-height: 44px;
+      border-radius: 8px;
+    }
+  }
+  .required {
+    color: #dc2626;
+  }
+  .error {
+    color: #dc2626;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 12px;
 }

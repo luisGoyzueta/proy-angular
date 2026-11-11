@@ -4,4 +4,8 @@ export type Permission =
   | 'users.create'
   | 'users.edit'
   | 'users.delete'
-  | 'settings.view';
+  | 'settings.view'
+  | 'products.view'
+  | 'products.create'
+  | 'products.edit'
+  | 'products.delete';

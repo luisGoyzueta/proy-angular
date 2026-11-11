@@ -42,6 +42,28 @@
     </div>
   </div>
 
+  <div class="product-grid">
+    @for (product of productStore.products(); track product.id) {
+      <article class="product-grid__card">
+        <header class="product-grid__card__header">
+          <h3 class="product-grid__card__title">
+            {{ product.name || 'Producto destacado' }}
+          </h3>
+          <span class="product-grid__card__status">
+            <p-tag
+              [value]="product.status"
+              [severity]="product.status === 'Activo' ? 'success' : 'danger'"
+            />
+          </span>
+        </header>
+        <p class="product-grid__card__price">
+          {{ product.price | currency: 'PEN ' : 'symbol' : '1.2-2' }}
+        </p>
+        <button class="product-grid__card__edit" type="button">Editar producto</button>
+      </article>
+    }
+  </div>
+
   <section class="chart-card">
     <h2>Resumen de ventas</h2>
     <p>Evolución de los últimos seis meses</p>

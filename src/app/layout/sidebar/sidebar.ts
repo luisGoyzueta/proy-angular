@@ -34,6 +34,12 @@ export class Sidebar {
       permission: 'users.view',
     },
     {
+      label: 'Productos',
+      icon: 'pi pi-box',
+      route: '/products',
+      permission: 'products.view',
+    },
+    {
       label: 'Configuración',
       icon: 'pi pi-cog',
       route: '/settings',
