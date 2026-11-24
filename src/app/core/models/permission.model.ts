@@ -8,4 +8,8 @@ export type Permission =
   | 'products.view'
   | 'products.create'
   | 'products.edit'
-  | 'products.delete';
+  | 'products.delete'
+  | 'curso.view'
+  | 'curso.create'
+  | 'curso.edit'
+  | 'curso.delete';

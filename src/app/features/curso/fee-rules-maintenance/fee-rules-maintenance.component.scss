@@ -1,0 +1,509 @@
+// ==============================================================================
+// Fee Rules Maintenance Stylesheet (WCAG 2.2 AA & Optimized Bundle)
+// ==============================================================================
+
+:host {
+  display: block;
+  width: 100%;
+  color: var(--form-text, #0f172a);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+$primary: var(--brand-primary-default, #4f46e5);
+$text-main: var(--form-text, #0f172a);
+$text-muted: var(--form-muted, #64748b);
+$border-color: var(--form-border, #cbd5e1);
+$surface-bg: var(--form-surface, #ffffff);
+$surface-alt: #f8fafc;
+$error: var(--form-error, #b91c1c);
+$error-bg: #fef2f2;
+$success: #15803d;
+$success-bg: #f0fdf4;
+
+.fee-rules-container {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.fee-rules-card {
+  background: $surface-bg;
+  border: 1px solid $border-color;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid $border-color;
+
+  .header-content {
+    flex: 1;
+
+    .form-title {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: $text-main;
+      margin: 0 0 0.25rem;
+      line-height: 1.25;
+    }
+
+    .form-description {
+      font-size: 0.875rem;
+      color: $text-muted;
+      margin: 0;
+      line-height: 1.4;
+
+      .required-indicator {
+        color: $error;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .header-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: $surface-alt;
+    border: 1px solid $border-color;
+    border-radius: 0.5rem;
+    width: fit-content;
+
+    .toggle-status-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $text-main;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .status-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+
+      &--active {
+        background-color: $success-bg;
+        color: $success;
+      }
+
+      &--inactive {
+        background-color: #f1f5f9;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+.feedback-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 1rem 1.5rem 0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+
+  &--error {
+    background-color: $error-bg;
+    border: 1px solid #fecaca;
+    color: $error;
+  }
+
+  &--success {
+    background-color: $success-bg;
+    border: 1px solid #bbf7d0;
+    color: $success;
+  }
+
+  .banner-icon {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+  }
+
+  .banner-body {
+    .banner-title {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.125rem;
+    }
+
+    .banner-text {
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+}
+
+.fee-form {
+  padding: 1.5rem;
+}
+
+.form-section {
+  border: 1px solid $border-color;
+  border-radius: 0.625rem;
+  padding: 1.25rem;
+  margin: 0 0 1.5rem;
+  background: $surface-bg;
+
+  .section-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-main;
+
+    .legend-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      background: $primary;
+      color: #fff;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+  }
+
+  .section-instruction {
+    font-size: 0.8125rem;
+    color: $text-muted;
+    margin: 0 0 1rem;
+  }
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem 1.25rem;
+  grid-template-columns: 1fr;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  &.max-w-sm {
+    max-width: 24rem;
+  }
+
+  .field-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-main;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    .required-indicator {
+      color: $error;
+      font-weight: bold;
+    }
+  }
+
+  .field-help {
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+
+  .field-error {
+    font-size: 0.75rem;
+    color: $error;
+    font-weight: 500;
+    margin: 0.125rem 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    i {
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+.uppercase-input {
+  text-transform: uppercase;
+}
+
+.routes-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.route-card {
+  background: $surface-alt;
+  border: 1px solid $border-color;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid $border-color;
+
+    .route-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+
+      &--origin {
+        background: #e0f2fe;
+        color: #0369a1;
+      }
+
+      &--dest {
+        background: #fef3c7;
+        color: #b45309;
+      }
+    }
+
+    .route-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: $text-main;
+      margin: 0;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.selection-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  border: 1px dashed $border-color;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  color: $text-muted;
+
+  i {
+    color: $primary;
+    font-size: 1rem;
+  }
+
+  strong {
+    color: $text-main;
+  }
+
+  &--large {
+    margin-top: 1rem;
+    background: $surface-alt;
+    border-style: solid;
+    padding: 1rem 1.25rem;
+
+    p {
+      margin: 0.25rem 0 0;
+      font-size: 0.8125rem;
+    }
+  }
+}
+
+.airline-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.picklist-counter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--brand-primary-subtle, #eef2ff);
+  color: $primary;
+  border: 1px solid #c7d2fe;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.picklist-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+
+  .airline-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.375rem 0.25rem;
+    width: 100%;
+
+    .airline-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.25rem;
+      height: 1.5rem;
+      background: $surface-alt;
+      border: 1px solid $border-color;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: $primary;
+    }
+
+    .airline-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .airline-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-main;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .airline-country {
+        font-size: 0.75rem;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+.form-actions-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid $border-color;
+
+  .footer-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: $text-muted;
+
+    i {
+      color: $primary;
+    }
+  }
+
+  .footer-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: flex-end;
+
+    :host ::ng-deep .action-btn {
+      min-height: 2.5rem;
+      min-width: 7.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Media queries consolidadas
+@media (min-width: 640px) {
+  .form-grid--4-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .airline-controls,
+  .form-actions-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 768px) {
+  .fee-rules-container {
+    padding: 1.5rem;
+  }
+
+  .form-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.75rem 2rem;
+
+    .header-content .form-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .fee-form {
+    padding: 2rem;
+  }
+
+  .form-section {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-grid--2-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .routes-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-grid--4-col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Accesibilidad de foco WCAG 2.4.7
+:focus-visible {
+  outline: 2px solid $primary;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

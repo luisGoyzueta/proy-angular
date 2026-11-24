@@ -46,6 +46,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/products/products').then((m) => m.Products),
       },
       {
+        path: 'curso',
+        canActivate: [permissionGuard],
+        data: { permission: 'curso.view' },
+        loadComponent: () => import('./features/curso/curso').then((m) => m.Curso),
+      },
+      {
         path: 'forbidden',
         loadComponent: () => import('./features/forbidden/forbidden').then((m) => m.Forbidden),
       },

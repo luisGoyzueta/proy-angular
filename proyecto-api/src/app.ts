@@ -7,6 +7,7 @@ import helmet from "helmet";
 import "./database/db.js";
 import { usersRouter } from "./routes/users.routes.js";
 import { productsRouter } from './routes/products.routes.js';
+import { cursoRouter } from './routes/curso.js';
 import { initializeAuthDatabase } from './database/auth-db.js';
 
 import cookieParser from 'cookie-parser';
@@ -74,7 +75,7 @@ app.use('/api/auth', authRouter);
 // 8. Rutas de usuarios
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
-
+app.use('/api/curso', cursoRouter);
 // 9. Manejar rutas /api no encontradas
 app.use('/api', (_req, res) => {
   res.status(404).json({

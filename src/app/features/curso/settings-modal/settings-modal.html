@@ -1,0 +1,33 @@
+<div class="backdrop" (click)="close()">
+  <div
+    class="modal-card"
+    appFocusTrap
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="settings-title"
+    (click)="$event.stopPropagation()">
+
+    <h2 id="settings-title">Ajustes de Interfaz</h2>
+
+    <form (submit)="save($event)">
+      <div class="field">
+        <label for="username">Nombre de usuario</label>
+        <input id="username" type="text" placeholder="Ej. lgoyzueta" />
+      </div>
+
+      <div class="field">
+        <label for="theme">Tema visual</label>
+        <select id="theme">
+          <option value="system">Sistema</option>
+          <option value="dark">Oscuro</option>
+          <option value="light">Claro</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-ghost" (click)="close()">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>

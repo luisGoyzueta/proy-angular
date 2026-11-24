@@ -1,0 +1,610 @@
+<section class="fee-rules-container" aria-labelledby="form-title">
+  <!-- Tarjeta principal semántica -->
+  <article class="fee-rules-card">
+    <!-- Header del Formulario -->
+    <header class="form-header">
+      <div class="header-content">
+        <h1 id="form-title" class="form-title">Mantenimiento de reglas Fees</h1>
+        <p class="form-description">
+          Configura las condiciones de emisión, márgenes y restricciones por ruta y aerolínea. Los
+          campos marcados con <span class="required-indicator" aria-hidden="true">(*)</span> son
+          obligatorios.
+        </p>
+      </div>
+
+      <!-- Estado Activo/Inactivo en Header accesible -->
+      <div class="header-toggle-container">
+        <p-toggleswitch
+          inputId="ruleActiveToggle"
+          [formControl]="feeRuleForm.controls.active"
+          aria-describedby="activeToggleHelp"
+        ></p-toggleswitch>
+        <label for="ruleActiveToggle" class="toggle-status-label">
+          Estado:
+          <span
+            class="status-pill"
+            [class.status-pill--active]="feeRuleForm.controls.active.value"
+            [class.status-pill--inactive]="!feeRuleForm.controls.active.value"
+          >
+            {{ feeRuleForm.controls.active.value ? 'Activo' : 'Inactivo' }}
+          </span>
+        </label>
+        <span id="activeToggleHelp" class="sr-only">
+          Determina si la regla de fee será evaluada activamente durante la cotización de tarifas.
+        </span>
+      </div>
+    </header>
+
+    <!-- Resúmenes Accesibles de Error / Éxito (WCAG 3.3.1, 4.1.3) -->
+    @if (formErrorMessage()) {
+      <div
+        id="form-error-summary"
+        role="alert"
+        tabindex="-1"
+        class="feedback-banner feedback-banner--error"
+        aria-live="assertive"
+      >
+        <i class="pi pi-exclamation-circle banner-icon" aria-hidden="true"></i>
+        <div class="banner-body">
+          <strong class="banner-title">Atención requerida</strong>
+          <p class="banner-text">{{ formErrorMessage() }}</p>
+        </div>
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div role="status" class="feedback-banner feedback-banner--success" aria-live="polite">
+        <i class="pi pi-check-circle banner-icon" aria-hidden="true"></i>
+        <div class="banner-body">
+          <strong class="banner-title">Operación exitosa</strong>
+          <p class="banner-text">{{ successMessage() }}</p>
+        </div>
+      </div>
+    }
+
+    <!-- Formulario Reactivo Principal -->
+    <form [formGroup]="feeRuleForm" (ngSubmit)="onSubmit()" novalidate class="fee-form">
+      <!-- ======================================================== -->
+      <!-- 1. CONFIGURACIÓN GENERAL                                -->
+      <!-- ======================================================== -->
+      <fieldset class="form-section">
+        <legend class="section-legend">
+          <span class="legend-badge">1</span>
+          <span class="legend-text">Configuración General</span>
+        </legend>
+
+        <div class="form-grid form-grid--2-col">
+          <!-- Nombre de la regla -->
+          <div class="form-field">
+            <label for="ruleName" class="field-label">
+              Nombre de la regla <span class="required-indicator" aria-hidden="true">*</span>
+            </label>
+            <input
+              pInputText
+              id="ruleName"
+              formControlName="ruleName"
+              placeholder="Ej. Fee B2C Vuelos Nacionales 2026"
+              class="w-full"
+              [attr.aria-invalid]="hasError('ruleName') ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('ruleName', true, hasError('ruleName'))"
+            />
+            <small id="ruleName-help" class="field-help"
+              >Identificador descriptivo único de la regla.</small
+            >
+            @if (hasError('ruleName', 'required')) {
+              <p id="ruleName-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> El nombre de la regla es
+                obligatorio.
+              </p>
+            } @else if (hasError('ruleName', 'minlength')) {
+              <p id="ruleName-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Debe contener al menos 4
+                caracteres.
+              </p>
+            }
+          </div>
+
+          <!-- Web -->
+          <div class="form-field">
+            <label for="web" class="field-label">
+              Canal Web <span class="required-indicator" aria-hidden="true">*</span>
+            </label>
+            <p-select
+              id="web"
+              formControlName="web"
+              [options]="webOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecciona el portal web"
+              class="w-full"
+              [attr.aria-invalid]="hasError('web') ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('web', false, hasError('web'))"
+            ></p-select>
+            @if (hasError('web', 'required')) {
+              <p id="web-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Debes seleccionar un canal web.
+              </p>
+            }
+          </div>
+
+          <!-- Dispositivo -->
+          <div class="form-field">
+            <label for="device" class="field-label">
+              Dispositivo <span class="required-indicator" aria-hidden="true">*</span>
+            </label>
+            <p-select
+              id="device"
+              formControlName="device"
+              [options]="deviceOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Selecciona dispositivo"
+              class="w-full"
+              [attr.aria-invalid]="hasError('device') ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('device', false, hasError('device'))"
+            ></p-select>
+            @if (hasError('device', 'required')) {
+              <p id="device-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Debes seleccionar un
+                dispositivo.
+              </p>
+            }
+          </div>
+
+          <!-- PCC (Pseudo City Code) -->
+          <div class="form-field">
+            <label for="pcc" class="field-label">
+              PCC (GDS Office ID) <span class="required-indicator" aria-hidden="true">*</span>
+            </label>
+            <input
+              pInputText
+              id="pcc"
+              formControlName="pcc"
+              placeholder="Ej. 7ABC"
+              maxlength="5"
+              class="w-full uppercase-input"
+              [attr.aria-invalid]="hasError('pcc') ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('pcc', true, hasError('pcc'))"
+            />
+            <small id="pcc-help" class="field-help"
+              >Código de oficina de 3 a 5 caracteres alfanuméricos.</small
+            >
+            @if (hasError('pcc', 'required')) {
+              <p id="pcc-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> El código PCC es obligatorio.
+              </p>
+            } @else if (hasError('pcc', 'pattern')) {
+              <p id="pcc-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Formato inválido: usa entre 3 y
+                5 caracteres alfanuméricos en mayúsculas.
+              </p>
+            }
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ======================================================== -->
+      <!-- 2. REGLAS DE TARIFA Y FEE                               -->
+      <!-- ======================================================== -->
+      <fieldset class="form-section">
+        <legend class="section-legend">
+          <span class="legend-badge">2</span>
+          <span class="legend-text">Reglas de Tarifa y Fee</span>
+        </legend>
+
+        <div class="form-grid form-grid--4-col">
+          <!-- Tipo de vuelo -->
+          <div class="form-field">
+            <label for="flightType" class="field-label">Tipo de vuelo</label>
+            <p-select
+              id="flightType"
+              formControlName="flightType"
+              [options]="flightTypeOptions"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            ></p-select>
+          </div>
+
+          <!-- Tipo de Tarifa -->
+          <div class="form-field">
+            <label for="fareType" class="field-label">Tipo de Tarifa</label>
+            <p-select
+              id="fareType"
+              formControlName="fareType"
+              [options]="fareTypeOptions"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            ></p-select>
+          </div>
+
+          <!-- Tipo Monto de Fee -->
+          <div class="form-field">
+            <label for="feeAmountType" class="field-label">Tipo Monto de Fee</label>
+            <p-select
+              id="feeAmountType"
+              formControlName="feeAmountType"
+              [options]="feeAmountTypeOptions"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            ></p-select>
+          </div>
+
+          <!-- Valor del Fee (Dinámico) -->
+          <div class="form-field">
+            <label for="feeValue" class="field-label">
+              Valor del Fee <span class="required-indicator" aria-hidden="true">*</span>
+            </label>
+            <p-inputnumber
+              id="feeValue"
+              formControlName="feeValue"
+              [prefix]="feePrefix()"
+              [suffix]="feeSuffix()"
+              [min]="0.01"
+              [max]="feeMaxLimit()"
+              [minFractionDigits]="2"
+              [maxFractionDigits]="2"
+              class="w-full"
+              [attr.aria-invalid]="hasError('feeValue') ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('feeValue', true, hasError('feeValue'))"
+            ></p-inputnumber>
+            <small id="feeValue-help" class="field-help">
+              {{
+                selectedFeeAmountType() === 'percentage'
+                  ? 'Rango permitido: 0.01% a 100%'
+                  : 'Monto neto fijo en dólares americanos'
+              }}
+            </small>
+            @if (hasError('feeValue', 'required')) {
+              <p id="feeValue-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> Ingresa el valor del fee.
+              </p>
+            } @else if (hasError('feeValue', 'min') || hasError('feeValue', 'max')) {
+              <p id="feeValue-error" role="alert" class="field-error">
+                <i class="pi pi-info-circle" aria-hidden="true"></i> El valor debe estar entre 0.01
+                y {{ feeMaxLimit() }}.
+              </p>
+            }
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ======================================================== -->
+      <!-- 3. RANGO DE PRECIO VENTA (USD)                          -->
+      <!-- ======================================================== -->
+      <fieldset class="form-section">
+        <legend class="section-legend">
+          <span class="legend-badge">3</span>
+          <span class="legend-text">Rango de Precio Venta (USD)</span>
+        </legend>
+        <p class="section-instruction">
+          Opcional. Define un umbral tarifario para restringir la aplicación de este fee al precio
+          base del boleto.
+        </p>
+
+        <div class="form-grid form-grid--2-col">
+          <!-- Precio Desde -->
+          <div class="form-field">
+            <label for="priceFrom" class="field-label">Precio Desde</label>
+            <p-inputnumber
+              id="priceFrom"
+              formControlName="priceFrom"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+              placeholder="$ 0.00"
+              class="w-full"
+              [attr.aria-invalid]="hasCrossPriceError() ? 'true' : null"
+              [attr.aria-describedby]="
+                hasCrossPriceError() ? 'priceFrom-help priceTo-error' : 'priceFrom-help'
+              "
+            ></p-inputnumber>
+            <small id="priceFrom-help" class="field-help">Límite inferior en USD.</small>
+          </div>
+
+          <!-- Precio Hasta con Validación Cruzada -->
+          <div class="form-field">
+            <label for="priceTo" class="field-label">Precio Hasta</label>
+            <p-inputnumber
+              id="priceTo"
+              formControlName="priceTo"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+              placeholder="$ 0.00"
+              class="w-full"
+              [attr.aria-invalid]="hasCrossPriceError() ? 'true' : null"
+              [attr.aria-describedby]="getAriaDescribedBy('priceTo', true, hasCrossPriceError())"
+            ></p-inputnumber>
+            <small id="priceTo-help" class="field-help">Límite superior en USD.</small>
+            @if (hasCrossPriceError()) {
+              <p id="priceTo-error" role="alert" class="field-error">
+                <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+                El precio «Hasta» debe ser mayor o igual al precio «Desde».
+              </p>
+            }
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ======================================================== -->
+      <!-- 4. RUTAS (ORIGEN Y DESTINO)                             -->
+      <!-- ======================================================== -->
+      <fieldset class="form-section">
+        <legend class="section-legend">
+          <span class="legend-badge">4</span>
+          <span class="legend-text">Rutas (Origen y Destino)</span>
+        </legend>
+
+        <div class="routes-container">
+          <!-- Sub-bloque: Origen -->
+          <div class="route-card" role="region" aria-labelledby="origin-subblock-title">
+            <div class="route-card__header">
+              <span class="route-icon route-icon--origin" aria-hidden="true">
+                <i class="pi pi-send"></i>
+              </span>
+              <h2 id="origin-subblock-title" class="route-title">Ruta de Origen</h2>
+            </div>
+
+            <div class="route-card__body">
+              <!-- Selector Tipo de Ubicación (SelectButton) -->
+              <div class="form-field">
+                <label class="field-label">Tipo de ubicación</label>
+                <p-selectbutton
+                  formControlName="originLocationType"
+                  [options]="locationTypeOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                  aria-label="Selecciona tipo de ubicación para origen"
+                ></p-selectbutton>
+              </div>
+
+              <!-- Tipo de Selección -->
+              <div class="form-field">
+                <label for="originSelectionType" class="field-label">Tipo de selección</label>
+                <p-select
+                  id="originSelectionType"
+                  formControlName="originSelectionType"
+                  [options]="selectionTypeOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                ></p-select>
+              </div>
+
+              <!-- Selección de Ubicaciones (Ocultado/Deshabilitado si es ALL) -->
+              @if (!isOriginSelectionDisabled()) {
+                <div class="form-field">
+                  <label for="originSelection" class="field-label">
+                    Ubicaciones de origen
+                    <span class="required-indicator" aria-hidden="true">*</span>
+                  </label>
+                  <p-multiselect
+                    id="originSelection"
+                    formControlName="originSelection"
+                    [options]="
+                      getFilteredRouteOptions(feeRuleForm.controls.originLocationType.value)
+                    "
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Selecciona ubicaciones"
+                    display="chip"
+                    class="w-full"
+                    [attr.aria-invalid]="hasError('originSelection') ? 'true' : null"
+                    [attr.aria-describedby]="
+                      getAriaDescribedBy('originSelection', false, hasError('originSelection'))
+                    "
+                  ></p-multiselect>
+                  @if (hasError('originSelection', 'required')) {
+                    <p id="originSelection-error" role="alert" class="field-error">
+                      <i class="pi pi-info-circle" aria-hidden="true"></i> Selecciona al menos una
+                      ubicación de origen.
+                    </p>
+                  }
+                </div>
+              } @else {
+                <div class="selection-notice" role="note">
+                  <i class="pi pi-globe" aria-hidden="true"></i>
+                  <span
+                    >Aplica a <strong>todos los orígenes</strong> sin restricción geográfica.</span
+                  >
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Sub-bloque: Destino -->
+          <div class="route-card" role="region" aria-labelledby="dest-subblock-title">
+            <div class="route-card__header">
+              <span class="route-icon route-icon--dest" aria-hidden="true">
+                <i class="pi pi-map-marker"></i>
+              </span>
+              <h2 id="dest-subblock-title" class="route-title">Ruta de Destino</h2>
+            </div>
+
+            <div class="route-card__body">
+              <!-- Selector Tipo de Ubicación (SelectButton) -->
+              <div class="form-field">
+                <label class="field-label">Tipo de ubicación</label>
+                <p-selectbutton
+                  formControlName="destLocationType"
+                  [options]="locationTypeOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                  aria-label="Selecciona tipo de ubicación para destino"
+                ></p-selectbutton>
+              </div>
+
+              <!-- Tipo de Selección -->
+              <div class="form-field">
+                <label for="destSelectionType" class="field-label">Tipo de selección</label>
+                <p-select
+                  id="destSelectionType"
+                  formControlName="destSelectionType"
+                  [options]="selectionTypeOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  class="w-full"
+                ></p-select>
+              </div>
+
+              <!-- Selección de Ubicaciones (Ocultado/Deshabilitado si es ALL) -->
+              @if (!isDestSelectionDisabled()) {
+                <div class="form-field">
+                  <label for="destSelection" class="field-label">
+                    Ubicaciones de destino
+                    <span class="required-indicator" aria-hidden="true">*</span>
+                  </label>
+                  <p-multiselect
+                    id="destSelection"
+                    formControlName="destSelection"
+                    [options]="getFilteredRouteOptions(feeRuleForm.controls.destLocationType.value)"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Selecciona ubicaciones"
+                    display="chip"
+                    class="w-full"
+                    [attr.aria-invalid]="hasError('destSelection') ? 'true' : null"
+                    [attr.aria-describedby]="
+                      getAriaDescribedBy('destSelection', false, hasError('destSelection'))
+                    "
+                  ></p-multiselect>
+                  @if (hasError('destSelection', 'required')) {
+                    <p id="destSelection-error" role="alert" class="field-error">
+                      <i class="pi pi-info-circle" aria-hidden="true"></i> Selecciona al menos una
+                      ubicación de destino.
+                    </p>
+                  }
+                </div>
+              } @else {
+                <div class="selection-notice" role="note">
+                  <i class="pi pi-globe" aria-hidden="true"></i>
+                  <span
+                    >Aplica a <strong>todos los destinos</strong> sin restricción geográfica.</span
+                  >
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ======================================================== -->
+      <!-- 5. AEROLÍNEAS (SELECTOR DUAL PICKLIST)                  -->
+      <!-- ======================================================== -->
+      <fieldset class="form-section">
+        <legend class="section-legend">
+          <span class="legend-badge">5</span>
+          <span class="legend-text">Aerolíneas</span>
+        </legend>
+
+        <div class="airline-controls">
+          <div class="form-field max-w-sm">
+            <label for="airlineSelectionType" class="field-label"
+              >Tipo de selección de aerolíneas</label
+            >
+            <p-select
+              id="airlineSelectionType"
+              formControlName="airlineSelectionType"
+              [options]="airlineSelectionTypeOptions"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            ></p-select>
+          </div>
+
+          <!-- Contador accesible de selección -->
+          @if (!isAirlinesPickListDisabled()) {
+            <div class="picklist-counter-pill" aria-live="polite">
+              <i class="pi pi-check-square" aria-hidden="true"></i>
+              <span>{{ targetAirlinesCount() }} aerolínea(s) seleccionada(s)</span>
+            </div>
+          }
+        </div>
+
+        @if (!isAirlinesPickListDisabled()) {
+          <div
+            class="picklist-wrapper"
+            role="region"
+            aria-label="Selector de aerolíneas por lista dual"
+          >
+            <p-picklist
+              [source]="sourceAirlines()"
+              [target]="targetAirlines()"
+              [responsive]="true"
+              breakpoint="768px"
+              filterBy="name,code"
+              sourceFilterPlaceholder="Buscar por nombre o código..."
+              targetFilterPlaceholder="Buscar por nombre o código..."
+              [showSourceControls]="false"
+              [showTargetControls]="false"
+              (onMoveToTarget)="onPickListMoveToTarget($event)"
+              (onMoveToSource)="onPickListMoveToSource($event)"
+              (onMoveAllToTarget)="onPickListMoveToTarget($event)"
+              (onMoveAllToSource)="onPickListMoveToSource($event)"
+              sourceHeader="Líneas Aéreas Disponibles"
+              targetHeader="Líneas Aéreas Seleccionadas"
+              aria-label="Selector dual de líneas aéreas"
+            >
+              <ng-template #item let-airline pTemplate="item">
+                <div
+                  class="airline-item"
+                  [attr.aria-label]="airline.name + ' código ' + airline.code"
+                >
+                  <span class="airline-code">{{ airline.code }}</span>
+                  <div class="airline-info">
+                    <span class="airline-name">{{ airline.name }}</span>
+                    <span class="airline-country">{{ airline.country }}</span>
+                  </div>
+                </div>
+              </ng-template>
+            </p-picklist>
+          </div>
+        } @else {
+          <div class="selection-notice selection-notice--large" role="note">
+            <i class="pi pi-check-circle" aria-hidden="true"></i>
+            <div>
+              <strong>Aplica a todas las aerolíneas</strong>
+              <p>El fee se calculará para cualquier transportador sin exclusiones de inventario.</p>
+            </div>
+          </div>
+        }
+      </fieldset>
+
+      <!-- ======================================================== -->
+      <!-- 6. BARRA DE ACCIONES (FOOTER)                            -->
+      <!-- ======================================================== -->
+      <footer class="form-actions-footer">
+        <div class="footer-hint">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+          <span>Las modificaciones entrarán en vigencia inmediatamente al guardar.</span>
+        </div>
+
+        <div class="footer-buttons">
+          <p-button
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="action-btn"
+            (onClick)="onCancel()"
+          ></p-button>
+
+          <p-button
+            type="submit"
+            label="Guardar regla"
+            icon="pi pi-check"
+            [loading]="saving()"
+            severity="primary"
+            styleClass="action-btn"
+          ></p-button>
+        </div>
+      </footer>
+    </form>
+  </article>
+</section>

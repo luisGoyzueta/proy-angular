@@ -40,6 +40,12 @@ export class Sidebar {
       permission: 'products.view',
     },
     {
+      label: 'Cursos',
+      icon: 'pi pi-graduation-cap',
+      route: '/curso',
+      permission: 'curso.view',
+    },
+    {
       label: 'Configuración',
       icon: 'pi pi-cog',
       route: '/settings',

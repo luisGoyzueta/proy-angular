@@ -1,0 +1,29 @@
+<main style="padding: 2rem">
+  <h1>Abrir Modal Inyectado</h1>
+  <button
+    #deleteTrigger
+    type="button"
+    (click)="modalService.open(deleteTrigger)"
+    class="trigger-btn"
+  >
+    Eliminar elemento
+  </button>
+  <app-confirm-modal />
+
+  <h1>Directiva Standalone de Focus Trap para Diálogos y Drawers</h1>
+  <button #settingsTrigger type="button" (click)="openModal(settingsTrigger)" class="trigger-btn">
+    Abrir Ajustes
+  </button>
+
+  @if (modalVisible()) {
+    <app-settings-modal (closed)="closeModal()" />
+  }
+
+  <h1>Servicio de Diálogos Dinámicos con InjectionToken y Standalone</h1>
+  <button #btnEdit type="button" (click)="openEdit(btnEdit)">Editar datos de perfil</button>
+
+</main>
+
+<!-- <main style="padding: 2rem">
+  <app-fee-rules-maintenance />
+</main> -->

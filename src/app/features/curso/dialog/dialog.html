@@ -1,0 +1,28 @@
+<div class="overlay" (click)="onBackdropClick($event)">
+  <div
+    class="dialog-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    (click)="$event.stopPropagation()">
+
+    <header class="dialog-header">
+      <h2 id="dialog-title">Editar Perfil</h2>
+      <button type="button" class="close-icon" (click)="cancel()">✕</button>
+    </header>
+
+    <div class="dialog-body">
+      <label for="nameInput">Nombre de usuario</label>
+      <input id="nameInput" type="text" [value]="data.userName" #nameInput />
+      <label for="roleInput">Rol de diseño</label>
+      <input id="roleInput" type="text" [value]="data.role" #roleInput />
+    </div>
+
+    <footer class="dialog-footer">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="button" class="btn-save" (click)="save(nameInput.value, roleInput.value)">
+        Guardar
+      </button>
+    </footer>
+  </div>
+</div>
