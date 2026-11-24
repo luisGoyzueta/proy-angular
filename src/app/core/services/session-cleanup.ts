@@ -1,13 +1,21 @@
 import { Injectable, inject } from '@angular/core';
-import { UserStore } from '../../features/users/store/user-store';
+import { SESSION_CLEANUP_HANDLER, SessionCleanupHandler } from '../tokens/session-cleanup.token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionCleanupService {
-  private readonly userStore = inject(UserStore);
+  private readonly handlers = inject(SESSION_CLEANUP_HANDLER, { optional: true }) ?? [];
 
   clear(): void {
-    this.userStore.reset();
+    const handlerList: SessionCleanupHandler[] = Array.isArray(this.handlers)
+      ? this.handlers
+      : [this.handlers];
+
+    for (const handler of handlerList) {
+      if (handler && typeof handler.cleanup === 'function') {
+        handler.cleanup();
+      }
+    }
   }
 }

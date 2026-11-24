@@ -1,6 +1,7 @@
 <div class="overlay" (click)="onBackdropClick($event)">
   <div
     class="dialog-card"
+    appFocusTrap
     role="dialog"
     aria-modal="true"
     aria-labelledby="dialog-title"
@@ -8,7 +9,7 @@
 
     <header class="dialog-header">
       <h2 id="dialog-title">Editar Perfil</h2>
-      <button type="button" class="close-icon" (click)="cancel()">✕</button>
+      <button type="button" class="close-icon" aria-label="Cerrar diálogo" (click)="cancel()">✕</button>
     </header>
 
     <div class="dialog-body">

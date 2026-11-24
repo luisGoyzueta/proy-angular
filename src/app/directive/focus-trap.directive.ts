@@ -24,9 +24,11 @@ export class FocusTrapDirective implements AfterViewInit {
 
   private getFocusableElements(): HTMLElement[] {
     const rawElements = this.host.nativeElement.querySelectorAll(this.focusableSelectors);
-    // Filtrar elementos visibles en el layout (offsetParent !== null o tamaño mayor a 0)
+    // Filtrar elementos visibles en el layout (soporta navegadores reales, position: fixed y entornos JSDOM)
     return Array.from(rawElements).filter(
-      (el): el is HTMLElement => el instanceof HTMLElement && el.offsetParent !== null,
+      (el): el is HTMLElement =>
+        el instanceof HTMLElement &&
+        (el.offsetParent !== null || el.style.position === 'fixed' || (el.style.display !== 'none' && !el.hidden)),
     );
   }
 

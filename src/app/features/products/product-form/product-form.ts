@@ -1,4 +1,4 @@
-import { Component, input, output, computed, effect, untracked, inject } from '@angular/core';
+import { Component, input, output, computed, effect, untracked, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,6 +12,7 @@ import { Product, ProductFormValue, ProductStatus } from '../models/product.mode
   imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonModule],
   templateUrl: './product-form.html',
   styleUrl: './product-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ProductForm {
@@ -41,23 +42,9 @@ export class ProductForm {
   // Detectar si estamos editando
   readonly isEditing = computed(() => this.product() !== null);
   constructor() {
-    let previousVisible = false;
-    let previousProductId: string | null = null;
-
     effect(() => {
-      const isVisible = this.visible();
-      const currentProduct = this.product();
-      const currentProductId = currentProduct?.id ?? null;
-
-      // Detectar transición de apertura o cambio real de registro mientras está abierto
-      const justOpened = isVisible && !previousVisible;
-      const productChanged = isVisible && currentProductId !== previousProductId;
-
-      // Actualizar estado previo
-      previousVisible = isVisible;
-      previousProductId = isVisible ? currentProductId : null; // Reset al cerrar para garantizar carga limpia en reaperturas
-
-      if (justOpened || productChanged) {
+      if (this.visible()) {
+        const currentProduct = this.product();
         untracked(() => this.loadForm(currentProduct));
       }
     });

@@ -20,6 +20,7 @@
           autocomplete="username"
           placeholder="admin@demo.com"
           [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
+          [attr.aria-describedby]="form.controls.email.invalid && form.controls.email.touched ? 'email-error' : null"
         />
 
         @if (form.controls.email.invalid && form.controls.email.touched) {
@@ -39,10 +40,12 @@
           [fluid]="true"
           autocomplete="current-password"
           placeholder="Ingresa tu contraseña"
+          [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
+          [attr.aria-describedby]="form.controls.password.invalid && form.controls.password.touched ? 'password-error' : null"
         />
 
         @if (form.controls.password.invalid && form.controls.password.touched) {
-          <small class="field-error"> La contraseña es obligatoria. </small>
+          <small class="field-error" id="password-error"> La contraseña es obligatoria. </small>
         }
       </div>
 

@@ -9,6 +9,9 @@ import { apiErrorInterceptor } from './core/interceptors/api-error-interceptor';
 
 import { credentialsInterceptor } from './core/interceptors/credentials-interceptor';
 import { sessionInterceptor } from './core/interceptors/session-interceptor';
+import { SESSION_CLEANUP_HANDLER } from './core/tokens/session-cleanup.token';
+import { UserStore } from './features/users/store/user-store';
+import { ProductStore } from './features/products/store/product-store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +28,15 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true,
     }),
+    {
+      provide: SESSION_CLEANUP_HANDLER,
+      useExisting: UserStore,
+      multi: true,
+    },
+    {
+      provide: SESSION_CLEANUP_HANDLER,
+      useExisting: ProductStore,
+      multi: true,
+    },
   ],
 };

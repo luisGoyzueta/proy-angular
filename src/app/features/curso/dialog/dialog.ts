@@ -1,6 +1,7 @@
 import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DIALOG_DATA, DialogRef } from './dialog.tokens';
+import { FocusTrapDirective } from '../../../directive/focus-trap.directive';
 
 export interface EditProfileData {
   userName: string;
@@ -10,7 +11,7 @@ export interface EditProfileData {
 @Component({
   selector: 'app-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FocusTrapDirective],
   templateUrl: './dialog.html',
   styleUrl: './dialog.scss',
 })
