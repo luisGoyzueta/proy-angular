@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { UserStore } from '../users/store/user-store';
@@ -12,8 +12,9 @@ import { TagModule } from 'primeng/tag';
   imports: [DecimalPipe, CurrencyPipe, ChartModule, AccessibleChart, TagModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   ngOnInit(): void {
     this.userStore.loadUsers();
     this.productStore.loadProducts();

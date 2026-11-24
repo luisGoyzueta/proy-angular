@@ -1,19 +1,16 @@
-import { Component, output } from '@angular/core';
+import { Component, output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
-
-import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
-
 import { SessionCleanupService } from '../../core/services/session-cleanup';
-
 
 @Component({
   selector: 'app-header',
   imports: [ButtonModule, AvatarModule],
   templateUrl: './header.html',
   styleUrl: './header.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   menuClick = output<void>();

@@ -5,11 +5,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ProductService } from '../services/product';
 import { Product, ProductFormValue } from '../models/product.model';
+import { SessionCleanupHandler } from '../../../core/tokens/session-cleanup.token';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProductStore {
+export class ProductStore implements SessionCleanupHandler {
   private readonly productService = inject(ProductService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -70,6 +71,10 @@ export class ProductStore {
     this._selectedProduct.set(null);
     this._error.set(null);
     this._loaded.set(false);
+  }
+
+  cleanup(): void {
+    this.reset();
   }
 
   // MUTACIONES DIRECTAS DE ESTADO LOCAL

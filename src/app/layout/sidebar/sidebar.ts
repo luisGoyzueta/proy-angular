@@ -1,4 +1,4 @@
-import { Component, computed, output, inject } from '@angular/core';
+import { Component, computed, output, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PermissionService } from '../../core/services/permission';
 import { Permission } from '../../core/models/permission.model';
@@ -16,6 +16,7 @@ interface MenuItem {
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Sidebar {
   readonly navigate = output<void>();

@@ -1,4 +1,4 @@
-import { Component, input, output, computed, effect, untracked, inject } from '@angular/core';
+import { Component, input, output, computed, effect, untracked, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,6 +12,7 @@ import { User, UserFormValue, UserRole, UserStatus } from '../user.model';
   imports: [ReactiveFormsModule, DialogModule, InputTextModule, SelectModule, ButtonModule],
   templateUrl: './user-form.html',
   styleUrl: './user-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserForm {
   private readonly fb = inject(FormBuilder);
@@ -47,23 +48,9 @@ export class UserForm {
   // Detectar si estamos editando
   readonly isEditing = computed(() => this.user() !== null);
   constructor() {
-    let previousVisible = false;
-    let previousUserId: string | null = null;
-
     effect(() => {
-      const isVisible = this.visible();
-      const currentUser = this.user();
-      const currentUserId = currentUser?.id ?? null;
-
-      // Detectar transición de apertura o cambio real de registro mientras está abierto
-      const justOpened = isVisible && !previousVisible;
-      const userChanged = isVisible && currentUserId !== previousUserId;
-
-      // Actualizar estado previo
-      previousVisible = isVisible;
-      previousUserId = isVisible ? currentUserId : null; // Reset al cerrar para garantizar carga limpia en reaperturas
-
-      if (justOpened || userChanged) {
+      if (this.visible()) {
+        const currentUser = this.user();
         untracked(() => this.loadForm(currentUser));
       }
     });

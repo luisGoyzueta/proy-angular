@@ -1,16 +1,18 @@
 import { Component, ElementRef, HostListener, viewChild, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalService } from './modal.service';
+import { FocusTrapDirective } from '../../../directive/focus-trap.directive';
 
 @Component({
   selector: 'app-confirm-modal',
-  imports: [CommonModule],
+  imports: [CommonModule, FocusTrapDirective],
   template: `
     @if (modalService.isOpen()) {
       <div class="modal-backdrop" (click)="onBackdropClick($event)">
         <div
           #dialogContainer
           class="modal-card"
+          appFocusTrap
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"

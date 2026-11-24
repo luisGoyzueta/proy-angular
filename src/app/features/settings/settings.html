@@ -14,15 +14,15 @@
     <p-tabs [(value)]="activeTab" (valueChange)="clearMessage()">
       <p-tablist>
         <p-tab value="general">
-          <i class="pi pi-cog"></i>
+          <i class="pi pi-cog" aria-hidden="true"></i>
           General
         </p-tab>
         <p-tab value="notifications">
-          <i class="pi pi-bell"></i>
+          <i class="pi pi-bell" aria-hidden="true"></i>
           Notificaciones
         </p-tab>
         <p-tab value="security">
-          <i class="pi pi-lock"></i>
+          <i class="pi pi-lock" aria-hidden="true"></i>
           Seguridad
         </p-tab>
       </p-tablist>
@@ -37,19 +37,32 @@
             <div class="form-grid">
               <div class="field full-width">
                 <label for="companyName">Nombre de la empresa</label>
-                <input id="companyName" pInputText formControlName="companyName" />
+                <input
+                  id="companyName"
+                  pInputText
+                  formControlName="companyName"
+                  [attr.aria-invalid]="generalForm.controls.companyName.touched && generalForm.controls.companyName.invalid"
+                  [attr.aria-describedby]="generalForm.controls.companyName.touched && generalForm.controls.companyName.invalid ? 'companyName-error' : null"
+                />
                 @if (
                   generalForm.controls.companyName.touched &&
                   generalForm.controls.companyName.invalid
                 ) {
-                  <small class="error"> El nombre de la empresa es obligatorio. </small>
+                  <small id="companyName-error" class="error"> El nombre de la empresa es obligatorio. </small>
                 }
               </div>
               <div class="field full-width">
                 <label for="email">Correo electrónico</label>
-                <input id="email" pInputText type="email" formControlName="email" />
+                <input
+                  id="email"
+                  pInputText
+                  type="email"
+                  formControlName="email"
+                  [attr.aria-invalid]="generalForm.controls.email.touched && generalForm.controls.email.invalid"
+                  [attr.aria-describedby]="generalForm.controls.email.touched && generalForm.controls.email.invalid ? 'settingsEmail-error' : null"
+                />
                 @if (generalForm.controls.email.touched && generalForm.controls.email.invalid) {
-                  <small class="error"> Ingresa un correo electrónico válido. </small>
+                  <small id="settingsEmail-error" class="error"> Ingresa un correo electrónico válido. </small>
                 }
               </div>
               <div class="field">
@@ -145,12 +158,14 @@
                   type="password"
                   autocomplete="new-password"
                   formControlName="newPassword"
+                  [attr.aria-invalid]="securityForm.controls.newPassword.touched && securityForm.controls.newPassword.invalid"
+                  [attr.aria-describedby]="securityForm.controls.newPassword.touched && securityForm.controls.newPassword.invalid ? 'newPassword-error' : null"
                 />
                 @if (
                   securityForm.controls.newPassword.touched &&
                   securityForm.controls.newPassword.invalid
                 ) {
-                  <small class="error"> La contraseña debe tener al menos 8 caracteres. </small>
+                  <small id="newPassword-error" class="error"> La contraseña debe tener al menos 8 caracteres. </small>
                 }
               </div>
               <div class="field full-width">
@@ -161,9 +176,11 @@
                   type="password"
                   autocomplete="new-password"
                   formControlName="confirmPassword"
+                  [attr.aria-invalid]="securityForm.controls.confirmPassword.hasError('mismatch')"
+                  [attr.aria-describedby]="securityForm.controls.confirmPassword.hasError('mismatch') ? 'confirmPassword-error' : null"
                 />
                 @if (securityForm.controls.confirmPassword.hasError('mismatch')) {
-                  <small class="error"> Las contraseñas no coinciden. </small>
+                  <small id="confirmPassword-error" class="error"> Las contraseñas no coinciden. </small>
                 }
               </div>
             </div>
