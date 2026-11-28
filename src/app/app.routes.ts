@@ -58,6 +58,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/curso/curso').then((m) => m.Curso),
       },
       {
+        path: 'fee-rules-maintenance',
+        title: 'Mantenimiento | Fee Rules',
+        canActivate: [permissionGuard],
+        data: { permission: 'fee.view' },
+        loadComponent: () =>
+          import('./features/fee-rules-maintenance/fee-rules-maintenance.component').then(
+            (m) => m.FeeRulesMaintenanceComponent,
+          ),
+      },
+      {
         path: 'forbidden',
         title: 'Acceso Denegado | AdminPanel',
         loadComponent: () => import('./features/forbidden/forbidden').then((m) => m.Forbidden),

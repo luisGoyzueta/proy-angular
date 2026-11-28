@@ -1,0 +1,25 @@
+<footer
+  style="
+    padding: 1rem 2rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  "
+>
+  <p-button
+    label="Guardar (Success)"
+    severity="success"
+    (onClick)="toast.notify('Guardado', 'success', 'Cambios aplicados correctamente.')"
+  />
+  <p-button
+    label="Error crítico"
+    severity="danger"
+    (onClick)="toast.notify('Error de red', 'error', 'No se pudo conectar con el servidor.')"
+  />
+  <p-button label="Limpiar todos" severity="secondary" (onClick)="toast.clearAll()" />
+  <span>Total enviados: {{ toast.historyCount() }}</span>
+</footer>
+<p-toast key="standard" position="top-right" />
+<p-toast key="critical" position="bottom-right" />

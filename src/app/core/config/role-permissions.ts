@@ -17,6 +17,10 @@ export const ROLE_PERMISSIONS: Record<AuthRole, readonly Permission[]> = {
     'curso.create',
     'curso.edit',
     'curso.delete',
+    'fee.view',
+    'fee.create',
+    'fee.edit',
+    'fee.delete',
   ],
 
   Editor: [
@@ -27,7 +31,9 @@ export const ROLE_PERMISSIONS: Record<AuthRole, readonly Permission[]> = {
     'products.edit',
     'curso.view',
     'curso.edit',
+    'fee.view',
+    'fee.edit',
   ],
 
-  Usuario: ['dashboard.view', 'products.view', 'curso.view'],
+  Usuario: ['dashboard.view', 'products.view', 'curso.view', 'fee.view'],
 };

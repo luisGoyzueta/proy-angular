@@ -1,4 +1,5 @@
-<section class="fee-rules-container" aria-labelledby="form-title">
+<h2>Mantenimiento de reglas Fee</h2>
+  <section class="fee-rules-container" aria-labelledby="form-title">
   <!-- Tarjeta principal semántica -->
   <article class="fee-rules-card">
     <!-- Header del Formulario -->
@@ -351,8 +352,9 @@
             <div class="route-card__body">
               <!-- Selector Tipo de Ubicación (SelectButton) -->
               <div class="form-field">
-                <label class="field-label">Tipo de ubicación</label>
+                <label class="field-label" for="originLocationType">Tipo de ubicación</label>
                 <p-selectbutton
+                  id="originLocationType"
                   formControlName="originLocationType"
                   [options]="locationTypeOptions"
                   optionLabel="label"
@@ -428,8 +430,9 @@
             <div class="route-card__body">
               <!-- Selector Tipo de Ubicación (SelectButton) -->
               <div class="form-field">
-                <label class="field-label">Tipo de ubicación</label>
+                <label class="field-label" for="destLocationType">Tipo de ubicación</label>
                 <p-selectbutton
+                  id="destLocationType"
                   formControlName="destLocationType"
                   [options]="locationTypeOptions"
                   optionLabel="label"

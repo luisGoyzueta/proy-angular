@@ -12,9 +12,11 @@ import { sessionInterceptor } from './core/interceptors/session-interceptor';
 import { SESSION_CLEANUP_HANDLER } from './core/tokens/session-cleanup.token';
 import { UserStore } from './features/users/store/user-store';
 import { ProductStore } from './features/products/store/product-store';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    MessageService,
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([apiErrorInterceptor, credentialsInterceptor, sessionInterceptor]),

@@ -12,4 +12,8 @@ export type Permission =
   | 'curso.view'
   | 'curso.create'
   | 'curso.edit'
-  | 'curso.delete';
+  | 'curso.delete'
+  | 'fee.view'
+  | 'fee.create'
+  | 'fee.edit'
+  | 'fee.delete';

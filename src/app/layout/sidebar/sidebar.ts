@@ -47,6 +47,12 @@ export class Sidebar {
       permission: 'curso.view',
     },
     {
+      label: 'Fee Rules',
+      icon: 'pi pi-dollar',
+      route: '/fee-rules-maintenance',
+      permission: 'fee.view',
+    },
+    {
       label: 'Configuración',
       icon: 'pi pi-cog',
       route: '/settings',
